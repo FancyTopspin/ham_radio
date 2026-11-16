@@ -32,6 +32,7 @@ export async function recordAttempt(
   const attempt: AttemptEvent = {
     id: attemptId,
     question_id: question.id,
+    question_code: question.question_code,
     selected_choice_id: selectedChoiceId,
     is_correct: isCorrect,
     mode: mode,

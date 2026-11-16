@@ -51,6 +51,7 @@ export interface QuestionState {
 export interface AttemptEvent {
   id: string;
   question_id: string;
+  question_code?: string;
   selected_choice_id: string;
   is_correct: boolean;
   mode: 'study' | 'mock_exam' | 'mistake_drill';

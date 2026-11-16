@@ -1,7 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { LicenseClassType, StudyFocusPreset, SessionBatchSize } from '../types';
+import type { LicenseClassType, StudyFocusPreset, SessionBatchSize, AttemptEvent } from '../types';
 import { db } from '../db';
 import { hydratePoolQuestions } from '../db/hydration';
+import { fetchAuthStatus, logoutUser, type User } from '../services/authService';
+import {
+  getUnsyncedCount,
+  pushUnsyncedAttempts,
+  fetchCloudAttempts,
+  mergeCloudHistory,
+} from '../services/syncService';
+import { AuthModal } from '../components/AuthModal';
+import { ConflictModal } from '../components/ConflictModal';
 
 interface BucketCounts {
   unseen: number;
@@ -10,6 +19,13 @@ interface BucketCounts {
   mastered: number;
   total: number;
   mistakesCount: number;
+}
+
+interface SyncState {
+  isSyncing: boolean;
+  unsyncedCount: number;
+  lastSyncedAt: Date | null;
+  error: string | null;
 }
 
 interface AppContextType {
@@ -23,6 +39,13 @@ interface AppContextType {
   bucketCounts: BucketCounts;
   refreshStats: () => Promise<void>;
   forceRefreshPool: () => Promise<void>;
+  // Auth
+  currentUser: User | null;
+  openAuthModal: () => void;
+  logout: () => Promise<void>;
+  // Sync
+  syncState: SyncState;
+  triggerManualSync: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -53,6 +76,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     mastered: 0,
     total: 0,
     mistakesCount: 0,
+  });
+
+  // Auth State
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Sync State
+  const [syncState, setSyncState] = useState<SyncState>({
+    isSyncing: false,
+    unsyncedCount: 0,
+    lastSyncedAt: null,
+    error: null,
+  });
+
+  // Conflict Resolution State
+  const [conflictState, setConflictState] = useState<{
+    isOpen: boolean;
+    localCount: number;
+    cloudAttempts: AttemptEvent[];
+  }>({
+    isOpen: false,
+    localCount: 0,
+    cloudAttempts: [],
   });
 
   const setActiveClass = (cls: LicenseClassType) => {
@@ -95,6 +141,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       total: states.length,
       mistakesCount,
     });
+
+    // Also update unsynced count
+    const unsynced = await getUnsyncedCount();
+    setSyncState(prev => ({ ...prev, unsyncedCount: unsynced }));
   }, [activeClass]);
 
   const triggerHydration = useCallback(async (force = false) => {
@@ -109,9 +159,87 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [activeClass, refreshStats]);
 
+  // Initial Pool Hydration
   useEffect(() => {
     triggerHydration();
   }, [triggerHydration]);
+
+  // Check Auth Status on mount
+  useEffect(() => {
+    fetchAuthStatus().then(auth => {
+      if (auth.authenticated && auth.user) {
+        setCurrentUser(auth.user);
+      }
+    });
+  }, []);
+
+  // Perform Manual Sync
+  const triggerManualSync = useCallback(async () => {
+    setSyncState(prev => ({ ...prev, isSyncing: true, error: null }));
+    try {
+      const result = await pushUnsyncedAttempts();
+      const remainingUnsynced = await getUnsyncedCount();
+      setSyncState({
+        isSyncing: false,
+        unsyncedCount: remainingUnsynced,
+        lastSyncedAt: new Date(),
+        error: result.error || null,
+      });
+      await refreshStats();
+    } catch (err: unknown) {
+      setSyncState(prev => ({
+        ...prev,
+        isSyncing: false,
+        error: err instanceof Error ? err.message : 'Sync failed',
+      }));
+    }
+  }, [refreshStats]);
+
+  // Background auto-sync interval (every 3 minutes)
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const unsynced = await getUnsyncedCount();
+      if (unsynced > 0) {
+        await triggerManualSync();
+      }
+    }, 180000); // 3 minutes
+
+    return () => clearInterval(interval);
+  }, [triggerManualSync]);
+
+  // Handle Login Post-Processing & Conflict Check
+  const handleAuthSuccess = async (user: User) => {
+    setCurrentUser(user);
+    const localCount = await db.attempts.count();
+    const cloudAttempts = await fetchCloudAttempts();
+
+    if (localCount > 0 && cloudAttempts.length > 0) {
+      // Both exist -> prompt conflict resolution
+      setConflictState({
+        isOpen: true,
+        localCount,
+        cloudAttempts,
+      });
+    } else if (localCount > 0 && cloudAttempts.length === 0) {
+      // Brand new account with local guest history -> push local history automatically
+      await pushUnsyncedAttempts();
+      await refreshStats();
+    } else if (localCount === 0 && cloudAttempts.length > 0) {
+      // Cloud account on a fresh device -> download cloud history
+      await mergeCloudHistory(cloudAttempts);
+      await refreshStats();
+    }
+  };
+
+  const handleLogout = async () => {
+    await logoutUser();
+    setCurrentUser(null);
+  };
+
+  const handleConflictResolved = async () => {
+    setConflictState({ isOpen: false, localCount: 0, cloudAttempts: [] });
+    await refreshStats();
+  };
 
   return (
     <AppContext.Provider
@@ -126,9 +254,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         bucketCounts,
         refreshStats,
         forceRefreshPool: () => triggerHydration(true),
+        currentUser,
+        openAuthModal: () => setIsAuthModalOpen(true),
+        logout: handleLogout,
+        syncState,
+        triggerManualSync,
       }}
     >
       {children}
+
+      {/* Global Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={handleAuthSuccess}
+      />
+
+      {/* Account Linking Conflict Modal */}
+      <ConflictModal
+        isOpen={conflictState.isOpen}
+        localCount={conflictState.localCount}
+        cloudAttempts={conflictState.cloudAttempts}
+        onResolved={handleConflictResolved}
+      />
     </AppContext.Provider>
   );
 };

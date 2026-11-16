@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from .api import api
@@ -7,6 +7,7 @@ from .api import api
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', api.urls),
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

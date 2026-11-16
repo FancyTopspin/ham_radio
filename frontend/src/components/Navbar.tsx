@@ -1,5 +1,17 @@
 import React from 'react';
-import { Radio, RefreshCw, BookOpen, Award, AlertCircle, BarChart3, Settings } from 'lucide-react';
+import {
+  Radio,
+  BookOpen,
+  Award,
+  AlertCircle,
+  BarChart3,
+  Settings,
+  Cloud,
+  CloudOff,
+  RefreshCw,
+  User as UserIcon,
+  LogOut,
+} from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { LicenseClassType } from '../types';
 
@@ -9,7 +21,17 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => {
-  const { activeClass, setActiveClass, isHydrating, bucketCounts } = useApp();
+  const {
+    activeClass,
+    setActiveClass,
+    isHydrating,
+    bucketCounts,
+    currentUser,
+    openAuthModal,
+    logout,
+    syncState,
+    triggerManualSync,
+  } = useApp();
 
   const classLabels: Record<LicenseClassType, string> = {
     TECH: 'Technician',
@@ -30,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
             <div>
               <span className="font-bold text-lg tracking-tight">Ham Radio Prep</span>
               <span className="hidden sm:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded bg-blue-900 text-blue-200 border border-blue-700">
-                FCC FCC/NCVEC
+                FCC / NCVEC
               </span>
             </div>
           </div>
@@ -39,7 +61,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
           <nav className="hidden md:flex space-x-1 lg:space-x-2">
             <button
               onClick={() => setCurrentTab('dashboard')}
-              className={`px-3 py-2 rounded-md text-sm font-medium transition ${
+              className={`px-3 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
                 currentTab === 'dashboard' ? 'bg-slate-800 text-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               }`}
             >
@@ -47,7 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
             </button>
             <button
               onClick={() => setCurrentTab('study')}
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition ${
+              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
                 currentTab === 'study' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               }`}
             >
@@ -56,7 +78,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
             </button>
             <button
               onClick={() => setCurrentTab('mock')}
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition ${
+              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
                 currentTab === 'mock' ? 'bg-purple-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               }`}
             >
@@ -65,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
             </button>
             <button
               onClick={() => setCurrentTab('mistakes')}
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition ${
+              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
                 currentTab === 'mistakes' ? 'bg-rose-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               }`}
             >
@@ -79,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
             </button>
             <button
               onClick={() => setCurrentTab('analytics')}
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition ${
+              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
                 currentTab === 'analytics' ? 'bg-slate-800 text-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               }`}
             >
@@ -88,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
             </button>
             <button
               onClick={() => setCurrentTab('settings')}
-              className={`p-2 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white transition ${
+              className={`p-2 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white transition cursor-pointer ${
                 currentTab === 'settings' ? 'bg-slate-800 text-blue-400' : ''
               }`}
               title="Settings"
@@ -97,15 +119,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
             </button>
           </nav>
 
-          {/* Active Target Class Switcher */}
+          {/* Right Action Cluster: Target Class Switcher + Sync + Auth */}
           <div className="flex items-center space-x-3">
+            {/* Class Dropdown */}
             <div className="relative">
               <label htmlFor="class-select" className="sr-only">License Class</label>
               <select
                 id="class-select"
                 value={activeClass}
                 onChange={(e) => setActiveClass(e.target.value as LicenseClassType)}
-                className="bg-slate-800 border border-slate-700 text-white text-sm font-medium rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="bg-slate-800 border border-slate-700 text-white text-xs sm:text-sm font-medium rounded-lg px-2 sm:px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
               >
                 {(['TECH', 'GEN', 'EXTRA'] as LicenseClassType[]).map((cls) => (
                   <option key={cls} value={cls}>
@@ -115,11 +138,69 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
               </select>
             </div>
 
-            {/* Hydration / Sync Indicator */}
-            <div className="flex items-center text-xs text-slate-400" title={isHydrating ? "Hydrating local database..." : "Local-first active"}>
-              <RefreshCw className={`w-3.5 h-3.5 mr-1 ${isHydrating ? 'animate-spin text-blue-400' : 'text-emerald-400'}`} />
-              <span className="hidden sm:inline">{isHydrating ? 'Syncing...' : 'Local First'}</span>
-            </div>
+            {/* Sync Status Button */}
+            <button
+              onClick={triggerManualSync}
+              disabled={syncState.isSyncing}
+              className="flex items-center space-x-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition cursor-pointer"
+              title={
+                syncState.isSyncing
+                  ? 'Syncing with cloud...'
+                  : syncState.unsyncedCount > 0
+                  ? `${syncState.unsyncedCount} unsynced attempts. Click to sync.`
+                  : 'All practice synced to cloud.'
+              }
+            >
+              {syncState.isSyncing ? (
+                <RefreshCw className="w-3.5 h-3.5 text-blue-400 animate-spin" />
+              ) : syncState.unsyncedCount > 0 ? (
+                <>
+                  <CloudOff className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="hidden sm:inline text-amber-300 font-medium">
+                    {syncState.unsyncedCount} unsynced
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Cloud className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="hidden sm:inline text-emerald-400 font-medium">
+                    Synced
+                  </span>
+                </>
+              )}
+            </button>
+
+            {/* Auth / Profile Area */}
+            {currentUser ? (
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1.5 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-200">
+                  <UserIcon className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="max-w-[80px] sm:max-w-[120px] truncate">{currentUser.username}</span>
+                </div>
+                <button
+                  onClick={logout}
+                  className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-slate-800 transition cursor-pointer"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={openAuthModal}
+                className="flex items-center space-x-1 text-xs font-medium px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition shadow-sm cursor-pointer"
+              >
+                <UserIcon className="w-3.5 h-3.5" />
+                <span>Sign In</span>
+              </button>
+            )}
+
+            {/* Pool Hydration spinner */}
+            {isHydrating && (
+              <span title="Hydrating pool...">
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-400" />
+              </span>
+            )}
           </div>
 
         </div>
