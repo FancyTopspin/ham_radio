@@ -127,13 +127,28 @@ export async function recordAttempt(
 
 /**
  * Draws the next question for a continuous study session based on the chosen focus preset.
+ * Optionally constrained to a specific topic (SubGroup or SubElement).
  */
 export async function drawNextStudyQuestion(
   classType: LicenseClassType,
   preset: StudyFocusPreset = 'balanced',
-  excludeIds: string[] = []
+  excludeIds: string[] = [],
+  topicFilter?: { subGroupCode?: string; subElementCode?: string }
 ): Promise<Question | null> {
   const excludeSet = new Set(excludeIds);
+
+  let allowedIds: Set<string> | null = null;
+  if (topicFilter?.subGroupCode || topicFilter?.subElementCode) {
+    let qQuery = db.questions.where('class_type').equals(classType);
+    if (topicFilter.subGroupCode) {
+      qQuery = qQuery.filter(q => q.sub_group_code === topicFilter.subGroupCode);
+    } else if (topicFilter.subElementCode) {
+      qQuery = qQuery.filter(q => q.sub_element_code === topicFilter.subElementCode);
+    }
+    const topicQuestions = await qQuery.toArray();
+    if (topicQuestions.length === 0) return null;
+    allowedIds = new Set(topicQuestions.map(q => q.id));
+  }
 
   const states = await db.question_states
     .where('class_type').equals(classType)
@@ -141,7 +156,7 @@ export async function drawNextStudyQuestion(
 
   if (states.length === 0) return null;
 
-  // Group states by bucket
+  // Group states by bucket (filtered by topic if specified)
   const buckets: Record<StudyBucket, string[]> = {
     needs_work: [],
     learning: [],
@@ -150,6 +165,9 @@ export async function drawNextStudyQuestion(
   };
 
   for (const s of states) {
+    if (allowedIds && !allowedIds.has(s.question_id)) {
+      continue;
+    }
     if (!excludeSet.has(s.question_id)) {
       buckets[s.bucket].push(s.question_id);
     }
@@ -181,8 +199,11 @@ export async function drawNextStudyQuestion(
     // If all preferred buckets are empty, take ANY bucket that has questions left
     const nonEmpties = (Object.keys(buckets) as StudyBucket[]).filter(b => buckets[b].length > 0);
     if (nonEmpties.length === 0) {
-      // If all excluded, reset exclude pool
-      return drawNextStudyQuestion(classType, preset, []);
+      // If all excluded in this topic/session, reset exclude pool
+      if (excludeIds.length > 0) {
+        return drawNextStudyQuestion(classType, preset, [], topicFilter);
+      }
+      return null;
     }
     chosenBucket = nonEmpties[Math.floor(Math.random() * nonEmpties.length)];
   } else {

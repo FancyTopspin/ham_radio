@@ -8,6 +8,7 @@ export type SessionBatchSize = 10 | 25 | 50 | 'continuous';
 
 export interface Choice {
   id: string;
+  question_id?: string;
   original_letter: 'A' | 'B' | 'C' | 'D';
   choice_text: string;
   is_pinned_bottom: boolean;
@@ -83,6 +84,36 @@ export interface SubElement {
   exam_questions_count: number;
   groups: SubGroup[];
 }
+
+export interface TopicProgress {
+  total: number;
+  mastered: number;
+  learning: number;
+  needs_work: number;
+  unseen: number;
+  percentage: number; // 0 to 100
+}
+
+export interface TopicLessonInfo {
+  lessonNumber: number;
+  subGroupCode: string; // e.g. E1A
+  subElementCode: string; // e.g. E1
+  subElementTitle: string; // e.g. COMMISSION RULES
+  title: string; // e.g. Frequency privileges; signal frequency range...
+  questionCount: number;
+  progress: TopicProgress;
+}
+
+export interface SubElementGroupInfo {
+  code: string; // e.g. E1
+  title: string; // e.g. COMMISSION RULES
+  examQuestionsCount: number;
+  totalQuestions: number;
+  progress: TopicProgress;
+  lessons: TopicLessonInfo[];
+}
+
+export type StudyDisplayMode = 'list' | 'card';
 
 export interface SessionMilestoneStats {
   totalAnswered: number;

@@ -15,13 +15,16 @@ import {
   ChevronDown,
   Check,
   MessageSquare,
+  Layers,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { LicenseClassType } from '../types';
 
+export type NavTab = 'dashboard' | 'topics' | 'study_read' | 'study' | 'mock' | 'mistakes' | 'analytics' | 'settings';
+
 interface NavbarProps {
-  currentTab: 'dashboard' | 'study' | 'mock' | 'mistakes' | 'analytics' | 'settings';
-  setCurrentTab: (tab: 'dashboard' | 'study' | 'mock' | 'mistakes' | 'analytics' | 'settings') => void;
+  currentTab: NavTab;
+  setCurrentTab: (tab: NavTab) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => {
@@ -122,13 +125,24 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
               Dashboard
             </button>
             <button
+              onClick={() => setCurrentTab('topics')}
+              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
+                currentTab === 'topics' || currentTab === 'study_read'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+              }`}
+            >
+              <Layers className="w-4 h-4" />
+              <span>Lessons & Topics</span>
+            </button>
+            <button
               onClick={() => setCurrentTab('study')}
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
                 currentTab === 'study' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               }`}
             >
               <BookOpen className="w-4 h-4" />
-              <span>Study</span>
+              <span>Practice</span>
             </button>
             <button
               onClick={() => setCurrentTab('mock')}
@@ -354,10 +368,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
           Home
         </button>
         <button
+          onClick={() => setCurrentTab('topics')}
+          className={`text-xs px-2 py-1 ${currentTab === 'topics' || currentTab === 'study_read' ? 'text-blue-400 font-bold' : 'text-slate-400'}`}
+        >
+          Lessons
+        </button>
+        <button
           onClick={() => setCurrentTab('study')}
           className={`text-xs px-2 py-1 ${currentTab === 'study' ? 'text-blue-400 font-bold' : 'text-slate-400'}`}
         >
-          Study
+          Practice
         </button>
         <button
           onClick={() => setCurrentTab('mock')}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Award, AlertCircle, Sparkles, RefreshCw, FileText, GraduationCap, MessageSquare } from 'lucide-react';
+import { BookOpen, Award, AlertCircle, Sparkles, RefreshCw, FileText, GraduationCap, MessageSquare, Layers } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { LicenseClassType } from '../types';
 
@@ -8,12 +8,14 @@ interface DashboardViewProps {
   onStartMock: () => void;
   onStartMistakes: () => void;
   onOpenAnalytics: () => void;
+  onOpenTopics?: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
   onStartStudy,
   onStartMock,
   onStartMistakes,
+  onOpenTopics,
 }) => {
   const { activeClass, setActiveClass, bucketCounts, forceRefreshPool, isHydrating, openFeedbackModal } = useApp();
 
@@ -107,12 +109,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </p>
 
           <div className="pt-1 sm:pt-2 flex flex-wrap items-center gap-2 sm:gap-3">
+            {onOpenTopics && (
+              <button
+                onClick={onOpenTopics}
+                className="px-4 py-2 sm:px-6 sm:py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center space-x-1.5 sm:space-x-2 cursor-pointer"
+              >
+                <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>Browse Lessons</span>
+              </button>
+            )}
+
             <button
               onClick={onStartStudy}
               className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center space-x-1.5 sm:space-x-2 cursor-pointer"
             >
               <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              <span>Start Studying</span>
+              <span>Practice All</span>
             </button>
 
             <button
