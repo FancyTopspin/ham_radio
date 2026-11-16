@@ -1,7 +1,9 @@
 Django>=5.0,<5.2
 django-ninja>=1.1.0
 django-cors-headers>=4.3.0
-django-allauth>=0.61.1
+django-allauth[socialaccount]>=0.61.1
+pyjwt[crypto]>=2.8.0
+cryptography>=42.0.0
 gunicorn>=21.2.0
 python-dotenv>=1.0.0
 dj-database-url>=2.1.0
