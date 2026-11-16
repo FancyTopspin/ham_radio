@@ -1,10 +1,13 @@
 from ninja import NinjaAPI
+from questions.api import router as questions_router
 
 api = NinjaAPI(
     title="Ham Radio Exam Prep API",
     version="1.0.0",
     description="Backend API for Amateur Radio License Study, Quota Mock Exams, and Sync"
 )
+
+api.add_router("/questions", questions_router)
 
 @api.get("/health", tags=["Health"])
 def health_check(request):
