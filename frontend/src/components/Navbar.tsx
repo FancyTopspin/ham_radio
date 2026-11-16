@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Radio,
   BookOpen,
@@ -11,6 +11,9 @@ import {
   RefreshCw,
   User as UserIcon,
   LogOut,
+  GraduationCap,
+  ChevronDown,
+  Check,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { LicenseClassType } from '../types';
@@ -33,10 +36,59 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
     triggerManualSync,
   } = useApp();
 
+  const [isClassDropdownOpen, setIsClassDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsClassDropdownOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsClassDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const classLabels: Record<LicenseClassType, string> = {
     TECH: 'Technician',
     GEN: 'General',
     EXTRA: 'Amateur Extra',
+  };
+
+  const classDetails: Record<
+    LicenseClassType,
+    { name: string; element: string; questions: string; cycle: string; desc: string }
+  > = {
+    TECH: {
+      name: 'Technician',
+      element: 'Element 2',
+      questions: '35 Questions',
+      cycle: '2022–2026 Pool',
+      desc: 'Entry-level VHF/UHF & basic privileges',
+    },
+    GEN: {
+      name: 'General',
+      element: 'Element 3',
+      questions: '35 Questions',
+      cycle: '2023–2027 Pool',
+      desc: 'Worldwide HF band & DX privileges',
+    },
+    EXTRA: {
+      name: 'Amateur Extra',
+      element: 'Element 4',
+      questions: '50 Questions',
+      cycle: '2024–2028 Pool',
+      desc: 'All amateur radio frequencies & modes',
+    },
   };
 
   return (
@@ -121,21 +173,90 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
 
           {/* Right Action Cluster: Target Class Switcher + Sync + Auth */}
           <div className="flex items-center space-x-3">
-            {/* Class Dropdown */}
-            <div className="relative">
-              <label htmlFor="class-select" className="sr-only">License Class</label>
-              <select
-                id="class-select"
-                value={activeClass}
-                onChange={(e) => setActiveClass(e.target.value as LicenseClassType)}
-                className="bg-slate-800 border border-slate-700 text-white text-xs sm:text-sm font-medium rounded-lg px-2 sm:px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            {/* Class Dropdown Pill */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsClassDropdownOpen(!isClassDropdownOpen)}
+                className="flex items-center space-x-1.5 sm:space-x-2 bg-gradient-to-r from-blue-950/80 to-slate-800 hover:from-blue-900/90 hover:to-slate-750 border border-blue-500/40 hover:border-blue-400 text-white rounded-xl px-2.5 sm:px-3 py-1.5 transition shadow-sm cursor-pointer group"
+                aria-haspopup="true"
+                aria-expanded={isClassDropdownOpen}
+                title="Switch FCC License Class"
               >
-                {(['TECH', 'GEN', 'EXTRA'] as LicenseClassType[]).map((cls) => (
-                  <option key={cls} value={cls}>
-                    {classLabels[cls]}
-                  </option>
-                ))}
-              </select>
+                <div className="p-1 rounded-md bg-blue-600/30 text-blue-300 group-hover:bg-blue-600/50">
+                  <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400" />
+                </div>
+                <div className="text-left">
+                  <span className="text-[10px] text-blue-300/80 uppercase font-semibold tracking-wider hidden sm:block leading-none">
+                    Class
+                  </span>
+                  <span className="text-xs sm:text-sm font-bold text-white block leading-tight">
+                    {classLabels[activeClass]}
+                  </span>
+                </div>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 text-blue-300 transition-transform duration-200 ml-0.5 ${
+                    isClassDropdownOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+
+              {/* Rich Dropdown Popover */}
+              {isClassDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-slate-900/95 backdrop-blur-md border border-slate-700 rounded-2xl shadow-2xl z-50 p-2 space-y-1 animate-in fade-in zoom-in-95 duration-100">
+                  <div className="px-3 py-1.5 flex items-center justify-between border-b border-slate-800">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Select License Tier
+                    </span>
+                    <span className="text-[10px] font-medium text-blue-400">
+                      Official NCVEC
+                    </span>
+                  </div>
+
+                  {(['TECH', 'GEN', 'EXTRA'] as LicenseClassType[]).map((cls) => {
+                    const isSelected = activeClass === cls;
+                    const details = classDetails[cls];
+                    return (
+                      <button
+                        key={cls}
+                        type="button"
+                        onClick={() => {
+                          setActiveClass(cls);
+                          setIsClassDropdownOpen(false);
+                        }}
+                        className={`w-full text-left p-2.5 rounded-xl transition flex items-start justify-between cursor-pointer ${
+                          isSelected
+                            ? 'bg-blue-600/20 border border-blue-500/40 text-white'
+                            : 'hover:bg-slate-800/80 border border-transparent text-slate-300 hover:text-white'
+                        }`}
+                      >
+                        <div className="space-y-0.5">
+                          <div className="flex items-center space-x-2">
+                            <span className="font-bold text-sm text-white">
+                              {details.name} Class
+                            </span>
+                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 font-medium border border-slate-700">
+                              {details.element}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-400">
+                            {details.desc}
+                          </p>
+                          <div className="text-[10px] text-blue-400/90 font-medium">
+                            {details.questions} • {details.cycle}
+                          </div>
+                        </div>
+
+                        {isSelected && (
+                          <div className="shrink-0 ml-2 p-1 bg-blue-500/20 text-blue-400 rounded-full mt-0.5">
+                            <Check className="w-3.5 h-3.5" />
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Sync Status Button */}

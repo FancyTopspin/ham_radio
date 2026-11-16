@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Award, AlertCircle, Sparkles, RefreshCw, FileText } from 'lucide-react';
+import { BookOpen, Award, AlertCircle, Sparkles, RefreshCw, FileText, GraduationCap } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { LicenseClassType } from '../types';
 
@@ -15,7 +15,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onStartMock,
   onStartMistakes,
 }) => {
-  const { activeClass, bucketCounts, forceRefreshPool, isHydrating } = useApp();
+  const { activeClass, setActiveClass, bucketCounts, forceRefreshPool, isHydrating } = useApp();
 
   const classDisplay: Record<LicenseClassType, { name: string; quota: number; pass: number }> = {
     TECH: { name: 'Technician Class', quota: 35, pass: 26 },
@@ -32,15 +32,71 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       
       {/* Hero Welcome Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-lg relative overflow-hidden border border-slate-800">
-        <div className="relative z-10 max-w-2xl space-y-4">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Target: {currentInfo.name}</span>
+      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-lg relative overflow-hidden border border-slate-800 space-y-6">
+        
+        {/* Interactive 3-Class Segmented Switcher */}
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+              <GraduationCap className="w-4 h-4 text-blue-400" />
+              <span>Target FCC License Class:</span>
+            </span>
+            <span className="text-xs text-blue-300 font-medium hidden sm:inline">
+              Click any tier below to switch study pools instantly
+            </span>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-1.5 bg-slate-950/70 backdrop-blur border border-slate-700/70 rounded-2xl">
+            {([
+              { id: 'TECH', label: 'Technician', element: 'Element 2', quota: '35Q Exam', cycle: '2022–2026' },
+              { id: 'GEN', label: 'General', element: 'Element 3', quota: '35Q Exam', cycle: '2023–2027' },
+              { id: 'EXTRA', label: 'Amateur Extra', element: 'Element 4', quota: '50Q Exam', cycle: '2024–2028' },
+            ] as const).map((tier) => {
+              const isActive = activeClass === tier.id;
+              return (
+                <button
+                  key={tier.id}
+                  type="button"
+                  onClick={() => setActiveClass(tier.id)}
+                  className={`flex flex-col items-start px-4 py-3 rounded-xl transition text-left cursor-pointer ${
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-400/50'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/80 border border-transparent'
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="font-extrabold text-sm sm:text-base tracking-tight">
+                      {tier.label}
+                    </span>
+                    <span
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                        isActive
+                          ? 'bg-blue-700 text-blue-100'
+                          : 'bg-slate-800 text-slate-400'
+                      }`}
+                    >
+                      {tier.element}
+                    </span>
+                  </div>
+                  <div
+                    className={`text-[11px] mt-1 flex items-center space-x-1.5 ${
+                      isActive ? 'text-blue-100' : 'text-slate-400'
+                    }`}
+                  >
+                    <span>{tier.quota}</span>
+                    <span>•</span>
+                    <span>{tier.cycle}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Hero Title & Actions */}
+        <div className="relative z-10 max-w-2xl space-y-4">
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            FCC License Exam Prep
+            FCC {currentInfo.name} Prep
           </h1>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
             Zero-friction local study platform. Practice official FCC question pools with smart spaced repetition, 
