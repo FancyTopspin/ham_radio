@@ -32,25 +32,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       
       {/* Hero Welcome Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-lg relative overflow-hidden border border-slate-800 space-y-6">
+      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white rounded-3xl p-4 sm:p-8 shadow-lg relative overflow-hidden border border-slate-800 space-y-4 sm:space-y-6">
         
         {/* Interactive 3-Class Segmented Switcher */}
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
-              <GraduationCap className="w-4 h-4 text-blue-400" />
-              <span>Target FCC License Class:</span>
+        <div className="space-y-1.5 sm:space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+              <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400" />
+              <span>Target License Class:</span>
             </span>
             <span className="text-xs text-blue-300 font-medium hidden sm:inline">
-              Click any tier below to switch study pools instantly
+              Click any tier to switch study pools instantly
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-1.5 bg-slate-950/70 backdrop-blur border border-slate-700/70 rounded-2xl">
+          {/* 3-Column Grid on ALL devices (1 clean row on mobile, never stacked!) */}
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 p-1 sm:p-1.5 bg-slate-950/70 backdrop-blur border border-slate-700/70 rounded-xl sm:rounded-2xl">
             {([
-              { id: 'TECH', label: 'Technician', element: 'Element 2', quota: '35Q Exam', cycle: '2022–2026' },
-              { id: 'GEN', label: 'General', element: 'Element 3', quota: '35Q Exam', cycle: '2023–2027' },
-              { id: 'EXTRA', label: 'Amateur Extra', element: 'Element 4', quota: '50Q Exam', cycle: '2024–2028' },
+              { id: 'TECH', label: 'Technician', shortLabel: 'Tech', element: 'Element 2', shortElement: 'El. 2', quota: '35Q Exam', cycle: '2022–2026' },
+              { id: 'GEN', label: 'General', shortLabel: 'General', element: 'Element 3', shortElement: 'El. 3', quota: '35Q Exam', cycle: '2023–2027' },
+              { id: 'EXTRA', label: 'Amateur Extra', shortLabel: 'Extra', element: 'Element 4', shortElement: 'El. 4', quota: '50Q Exam', cycle: '2024–2028' },
             ] as const).map((tier) => {
               const isActive = activeClass === tier.id;
               return (
@@ -58,28 +59,30 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   key={tier.id}
                   type="button"
                   onClick={() => setActiveClass(tier.id)}
-                  className={`flex flex-col items-start px-4 py-3 rounded-xl transition text-left cursor-pointer ${
+                  className={`flex flex-col items-center sm:items-start px-2 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl transition text-center sm:text-left cursor-pointer ${
                     isActive
-                      ? 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-400/50'
+                      ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-400/50'
                       : 'text-slate-300 hover:text-white hover:bg-slate-800/80 border border-transparent'
                   }`}
                 >
-                  <div className="flex items-center justify-between w-full">
-                    <span className="font-extrabold text-sm sm:text-base tracking-tight">
-                      {tier.label}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
+                    <span className="font-bold sm:font-extrabold text-xs sm:text-base tracking-tight truncate">
+                      <span className="sm:hidden">{tier.shortLabel}</span>
+                      <span className="hidden sm:inline">{tier.label}</span>
                     </span>
                     <span
-                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      className={`text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded mt-0.5 sm:mt-0 ${
                         isActive
                           ? 'bg-blue-700 text-blue-100'
                           : 'bg-slate-800 text-slate-400'
                       }`}
                     >
-                      {tier.element}
+                      <span className="sm:hidden">{tier.shortElement}</span>
+                      <span className="hidden sm:inline">{tier.element}</span>
                     </span>
                   </div>
                   <div
-                    className={`text-[11px] mt-1 flex items-center space-x-1.5 ${
+                    className={`hidden sm:flex text-[11px] mt-1 items-center space-x-1.5 ${
                       isActive ? 'text-blue-100' : 'text-slate-400'
                     }`}
                   >
@@ -94,39 +97,39 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Hero Title & Actions */}
-        <div className="relative z-10 max-w-2xl space-y-4">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+        <div className="relative z-10 max-w-2xl space-y-2 sm:space-y-4">
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
             FCC {currentInfo.name} Prep
           </h1>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-300 text-xs sm:text-base leading-relaxed line-clamp-2 sm:line-clamp-none">
             Zero-friction local study platform. Practice official FCC question pools with smart spaced repetition, 
             exact blueprint mock exams, and instant weak-spot isolation.
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center gap-3">
+          <div className="pt-1 sm:pt-2 flex flex-wrap items-center gap-2 sm:gap-3">
             <button
               onClick={onStartStudy}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-md transition flex items-center space-x-2 cursor-pointer"
+              className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center space-x-1.5 sm:space-x-2 cursor-pointer"
             >
-              <BookOpen className="w-4 h-4" />
+              <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span>Start Studying</span>
             </button>
 
             <button
               onClick={onStartMock}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shadow-md transition flex items-center space-x-2 cursor-pointer"
+              className="px-4 py-2 sm:px-6 sm:py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center space-x-1.5 sm:space-x-2 cursor-pointer"
             >
-              <Award className="w-4 h-4" />
-              <span>Take Mock Exam ({currentInfo.quota}Q)</span>
+              <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span>Take Mock ({currentInfo.quota}Q)</span>
             </button>
 
             {bucketCounts.mistakesCount > 0 && (
               <button
                 onClick={onStartMistakes}
-                className="px-5 py-3 bg-rose-600/80 hover:bg-rose-600 text-white font-bold rounded-xl shadow-md transition flex items-center space-x-2 cursor-pointer"
+                className="px-3.5 py-2 sm:px-5 sm:py-3 bg-rose-600/80 hover:bg-rose-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center space-x-1.5 sm:space-x-2 cursor-pointer"
               >
-                <AlertCircle className="w-4 h-4" />
-                <span>Drill Mistakes ({bucketCounts.mistakesCount})</span>
+                <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>Drill ({bucketCounts.mistakesCount})</span>
               </button>
             )}
           </div>
