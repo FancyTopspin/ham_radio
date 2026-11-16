@@ -14,6 +14,7 @@ import {
   GraduationCap,
   ChevronDown,
   Check,
+  MessageSquare,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { LicenseClassType } from '../types';
@@ -34,6 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
     logout,
     syncState,
     triggerManualSync,
+    openFeedbackModal,
   } = useApp();
 
   const [isClassDropdownOpen, setIsClassDropdownOpen] = useState(false);
@@ -168,6 +170,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
               title="Settings"
             >
               <Settings className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => openFeedbackModal()}
+              className="flex items-center space-x-1 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition cursor-pointer border border-slate-700/60"
+              title="Share Feedback or Suggestions"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-blue-400" />
+              <span>Feedback</span>
             </button>
           </nav>
 

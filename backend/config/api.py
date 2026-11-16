@@ -1,6 +1,6 @@
 from ninja import NinjaAPI
 from questions.api import router as questions_router
-from core.api import router as auth_router
+from core.api import router as auth_router, feedback_router
 from study.api import router as study_router
 
 api = NinjaAPI(
@@ -12,6 +12,7 @@ api = NinjaAPI(
 api.add_router("/questions", questions_router)
 api.add_router("/auth", auth_router)
 api.add_router("/study", study_router)
+api.add_router("/feedback", feedback_router)
 
 @api.get("/health", tags=["Health"])
 def health_check(request):

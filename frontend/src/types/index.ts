@@ -92,3 +92,15 @@ export interface SessionMilestoneStats {
   demotions: number;
   timeSpentMs: number;
 }
+
+export type FeedbackCategory =
+  | 'general'
+  | 'question_issue'
+  | 'feature_request'
+  | 'exam_experience'
+  | 'passed_exam';
+
+export interface FeedbackPreset {
+  category?: FeedbackCategory;
+  questionCode?: string;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Award, AlertCircle, Sparkles, RefreshCw, FileText, GraduationCap } from 'lucide-react';
+import { BookOpen, Award, AlertCircle, Sparkles, RefreshCw, FileText, GraduationCap, MessageSquare } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { LicenseClassType } from '../types';
 
@@ -15,7 +15,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onStartMock,
   onStartMistakes,
 }) => {
-  const { activeClass, setActiveClass, bucketCounts, forceRefreshPool, isHydrating } = useApp();
+  const { activeClass, setActiveClass, bucketCounts, forceRefreshPool, isHydrating, openFeedbackModal } = useApp();
 
   const classDisplay: Record<LicenseClassType, { name: string; quota: number; pass: number }> = {
     TECH: { name: 'Technician Class', quota: 35, pass: 26 },
@@ -288,6 +288,33 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <FileText className="w-4 h-4" />
           <span>Download VE Flyer</span>
         </a>
+      </div>
+
+      {/* Community Feedback & Pass Announcement */}
+      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h4 className="font-bold text-slate-900 text-sm sm:text-base flex items-center space-x-2">
+            <MessageSquare className="w-4 h-4 text-blue-600" />
+            <span>Passed Your Exam or Have Suggestions?</span>
+          </h4>
+          <p className="text-xs text-slate-500 max-w-xl">
+            Whether you just earned your license, found an explanation that could be clearer, or have an idea for a feature—we would love your feedback!
+          </p>
+        </div>
+        <div className="flex items-center space-x-2 shrink-0">
+          <button
+            onClick={() => openFeedbackModal({ category: 'passed_exam' })}
+            className="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-bold text-xs rounded-xl transition cursor-pointer"
+          >
+            🎉 I Passed!
+          </button>
+          <button
+            onClick={() => openFeedbackModal()}
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition cursor-pointer"
+          >
+            Give Feedback
+          </button>
+        </div>
       </div>
 
     </div>

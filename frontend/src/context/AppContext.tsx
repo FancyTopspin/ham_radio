@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { LicenseClassType, StudyFocusPreset, SessionBatchSize, AttemptEvent } from '../types';
+import type { LicenseClassType, StudyFocusPreset, SessionBatchSize, AttemptEvent, FeedbackPreset } from '../types';
 import { db } from '../db';
 import { hydratePoolQuestions } from '../db/hydration';
 import { fetchAuthStatus, logoutUser, type User } from '../services/authService';
@@ -11,6 +11,7 @@ import {
 } from '../services/syncService';
 import { AuthModal } from '../components/AuthModal';
 import { ConflictModal } from '../components/ConflictModal';
+import { FeedbackModal } from '../components/FeedbackModal';
 
 interface BucketCounts {
   unseen: number;
@@ -46,6 +47,9 @@ interface AppContextType {
   // Sync
   syncState: SyncState;
   triggerManualSync: () => Promise<void>;
+  // Feedback
+  openFeedbackModal: (preset?: FeedbackPreset) => void;
+  closeFeedbackModal: () => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -100,6 +104,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localCount: 0,
     cloudAttempts: [],
   });
+
+  // Feedback Modal State
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [feedbackPreset, setFeedbackPreset] = useState<FeedbackPreset | null>(null);
+
+  const openFeedbackModal = useCallback((preset?: FeedbackPreset) => {
+    setFeedbackPreset(preset || null);
+    setIsFeedbackModalOpen(true);
+  }, []);
+
+  const closeFeedbackModal = useCallback(() => {
+    setIsFeedbackModalOpen(false);
+  }, []);
 
   const setActiveClass = (cls: LicenseClassType) => {
     setActiveClassState(cls);
@@ -259,6 +276,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         logout: handleLogout,
         syncState,
         triggerManualSync,
+        openFeedbackModal,
+        closeFeedbackModal,
       }}
     >
       {children}
@@ -276,6 +295,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         localCount={conflictState.localCount}
         cloudAttempts={conflictState.cloudAttempts}
         onResolved={handleConflictResolved}
+      />
+
+      {/* Global Feedback Modal */}
+      <FeedbackModal
+        isOpen={isFeedbackModalOpen}
+        onClose={closeFeedbackModal}
+        preset={feedbackPreset}
       />
     </AppContext.Provider>
   );

@@ -1,10 +1,11 @@
 import React from 'react';
-import { ExternalLink, Sparkles, TrendingDown, HelpCircle } from 'lucide-react';
+import { ExternalLink, Sparkles, TrendingDown, HelpCircle, MessageSquarePlus } from 'lucide-react';
 import type { Question, StudyBucket } from '../types';
 import type { DisplayedChoice } from '../engine/shuffler';
 import type { TransitionResult } from '../engine/studyEngine';
 import { ChoiceButton } from './ChoiceButton';
 import { MarkdownRenderer } from './MarkdownRenderer';
+import { useApp } from '../context/AppContext';
 
 interface StudyCardProps {
   question: Question;
@@ -34,6 +35,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   onSelectChoice,
   onAdvance,
 }) => {
+  const { openFeedbackModal } = useApp();
   const bucketInfo = BUCKET_LABELS[currentBucket] || BUCKET_LABELS.unseen;
 
   return (
@@ -54,8 +56,18 @@ export const StudyCard: React.FC<StudyCardProps> = ({
           )}
         </div>
 
-        {/* Bucket Status Badge */}
+        {/* Bucket Status Badge & Feedback Trigger */}
         <div className="flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={() => openFeedbackModal({ category: 'question_issue', questionCode: question.question_code })}
+            className="inline-flex items-center space-x-1 text-slate-400 hover:text-amber-600 hover:bg-amber-50 px-2 py-1 rounded-lg border border-transparent hover:border-amber-200 transition text-xs cursor-pointer"
+            title="Report an issue or suggest an improvement for this question"
+          >
+            <MessageSquarePlus className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline text-[11px] font-medium">Feedback</span>
+          </button>
+
           <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${bucketInfo.color}`}>
             {bucketInfo.label}
           </span>
@@ -145,6 +157,18 @@ export const StudyCard: React.FC<StudyCardProps> = ({
                 </div>
                 <div className="mt-2 pt-2 border-t border-slate-200">
                   <MarkdownRenderer content={question.explanation.explanation_markdown} />
+                </div>
+
+                <div className="mt-3 pt-2.5 border-t border-slate-200/60 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
+                  <span>Is this explanation clear and helpful?</span>
+                  <button
+                    type="button"
+                    onClick={() => openFeedbackModal({ category: 'question_issue', questionCode: question.question_code })}
+                    className="text-blue-600 hover:text-blue-800 font-medium hover:underline flex items-center space-x-1 cursor-pointer"
+                  >
+                    <MessageSquarePlus className="w-3.5 h-3.5" />
+                    <span>Suggest Improvement / Report Error</span>
+                  </button>
                 </div>
               </div>
             )}
