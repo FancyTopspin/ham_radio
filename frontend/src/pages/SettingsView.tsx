@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, AlertTriangle, Check, Keyboard, Database } from 'lucide-react';
+import { Settings, AlertTriangle, Check, Keyboard, Database, FileText, Download } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { resetClassProgress } from '../db/hydration';
 
@@ -85,6 +85,32 @@ export const SettingsView: React.FC = () => {
           <li><strong>Time Decay:</strong> Questions in <em>Mastered</em> that sit idle for more than 7 days automatically decay back to <em>Learning</em> for a refresher.</li>
           <li><strong>Mistakes Queue:</strong> Any wrong answer in study or mock mode is added to the Mistake Drill queue and leaves only after 2 consecutive correct answers.</li>
         </ul>
+      </div>
+
+      {/* Printable VE & Club Handout */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h3 className="font-bold text-slate-900 flex items-center space-x-2">
+              <FileText className="w-5 h-5 text-blue-600" />
+              <span>Printable VE Exam Flyer (1-Page PDF)</span>
+            </h3>
+            <p className="text-xs text-slate-500 max-w-xl">
+              A high-contrast 1-page handout designed for Volunteer Examiners (VEs), amateur radio clubs, Elmer nights, and hamfests.
+              Includes an instant QR code, 4-step licensing checklist, and a write-in section for local session and club contact info.
+            </p>
+          </div>
+          <a
+            href="/ve-handout-flyer.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download="HamRadio-VE-Handout-Flyer.pdf"
+            className="shrink-0 inline-flex items-center space-x-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs transition"
+          >
+            <Download className="w-4 h-4" />
+            <span>Download PDF Flyer</span>
+          </a>
+        </div>
       </div>
 
       {/* Local Storage & Cache Management */}

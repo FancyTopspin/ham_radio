@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Award, AlertCircle, Sparkles, RefreshCw } from 'lucide-react';
+import { BookOpen, Award, AlertCircle, Sparkles, RefreshCw, FileText } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { LicenseClassType } from '../types';
 
@@ -205,6 +205,30 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </button>
         </div>
 
+      </div>
+
+      {/* Club & VE Printable Resources Banner */}
+      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white border border-blue-900/50 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="space-y-2 max-w-2xl">
+          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Exam Sessions & Radio Clubs</span>
+          </div>
+          <h3 className="text-xl font-bold tracking-tight">Printable 1-Page VE Handout (PDF)</h3>
+          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Administering or attending an exam session? Download our official 1-page flyer equipped with an instant-access QR code, 4-step licensing checklist, and write-in local club notes.
+          </p>
+        </div>
+        <a
+          href="/ve-handout-flyer.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          download="HamRadio-VE-Handout-Flyer.pdf"
+          className="shrink-0 inline-flex items-center space-x-2 px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition cursor-pointer"
+        >
+          <FileText className="w-4 h-4" />
+          <span>Download VE Flyer</span>
+        </a>
       </div>
 
     </div>
