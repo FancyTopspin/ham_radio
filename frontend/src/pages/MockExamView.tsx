@@ -16,6 +16,7 @@ import { recordAttempt } from '../engine/studyEngine';
 import { MockExamTimer } from '../components/MockExamTimer';
 import { QuestionNavigator } from '../components/QuestionNavigator';
 import { ChoiceButton } from '../components/ChoiceButton';
+import { MarkdownRenderer } from '../components/MarkdownRenderer';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 interface MockExamViewProps {
@@ -393,10 +394,8 @@ export const MockExamView: React.FC<MockExamViewProps> = ({ onBackToDashboard })
               {/* Post-Submission Review Explanation */}
               {reviewMode && currentItem.question.explanation && (
                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 text-sm space-y-2 text-slate-800">
-                  <div className="font-bold text-slate-900">Explanation:</div>
-                  <div className="prose prose-sm text-slate-700 max-w-none whitespace-pre-line">
-                    {currentItem.question.explanation.explanation_markdown}
-                  </div>
+                  <div className="font-bold text-slate-900 border-b border-slate-200 pb-2">Explanation & Rule Analysis:</div>
+                  <MarkdownRenderer content={currentItem.question.explanation.explanation_markdown} />
                 </div>
               )}
 

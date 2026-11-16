@@ -4,6 +4,7 @@ import type { Question, StudyBucket } from '../types';
 import type { DisplayedChoice } from '../engine/shuffler';
 import type { TransitionResult } from '../engine/studyEngine';
 import { ChoiceButton } from './ChoiceButton';
+import { MarkdownRenderer } from './MarkdownRenderer';
 
 interface StudyCardProps {
   question: Question;
@@ -142,8 +143,8 @@ export const StudyCard: React.FC<StudyCardProps> = ({
                     </a>
                   )}
                 </div>
-                <div className="prose prose-sm text-slate-700 max-w-none whitespace-pre-line">
-                  {question.explanation.explanation_markdown}
+                <div className="mt-2 pt-2 border-t border-slate-200">
+                  <MarkdownRenderer content={question.explanation.explanation_markdown} />
                 </div>
               </div>
             )}
