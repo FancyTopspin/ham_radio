@@ -1,0 +1,20 @@
+[Unit]
+Description=Gunicorn daemon for Ham Radio License Web App
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/mnt/data/ham_radio_web_app/backend
+EnvironmentFile=/mnt/data/ham_radio_web_app/.env
+ExecStart=/mnt/data/ham_radio_web_app/.venv/bin/gunicorn \
+          --workers 3 \
+          --bind 127.0.0.1:8000 \
+          --access-logfile /mnt/data/ham_radio_web_app/backend/gunicorn_access.log \
+          --error-logfile /mnt/data/ham_radio_web_app/backend/gunicorn_error.log \
+          config.wsgi:application
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,52 @@
+﻿Ham Radio License Exam Web App: Architecture & System Blueprint
+Overview
+A modern, scalable study platform for amateur radio exam preparation (Technician, General, and Amateur Extra), designed for zero-friction onboarding via a hybrid local-first architecture coupled with a robust Django backend.
+
+
+________________
+
+
+Architecture Stack
+Component
+	Technology / Strategy
+	Key Benefit
+	Frontend
+	React + Vite + TypeScript
+	Blazing-fast client-side routing, zero-latency local state.
+	Local Storage
+	Dexie.js (IndexedDB)
+	Local-first, instant zero-friction onboarding (no forced login wall).
+	Backend & Sync
+	Django (DRF / Django Ninja)
+	Secure user accounts, robust relational data storage, easy expansion for future ham tools.
+	Sync Strategy
+	Append-Only Event Log
+	Immutable attempt history pushed to Django with ignore_conflicts=True. Zero merge conflicts.
+	Versioning
+	Composite (pool_version + code)
+	Cleanly handles the NCVEC 4-year staggered pool updates without breaking past history.
+	Study Engine
+	Hybrid Bucket + Time-Decay
+	Infinite cramming freedom combined with smart spaced repetition memory decay.
+	Exam & Analytics
+	Blueprint-Weighted + Mistake Drills
+	Exact FCC exam simulation quotas with automated weak-spot isolation.
+	
+
+________________
+
+
+Detailed Component Specifications
+1. Data Model & Versioning
+* Composite Versioning (pool_version + question_code): Ensures updates across the NCVEC 4-year cycles (Technician 2026–2030, General 2027, Extra 2028) maintain historical accuracy.
+* Option Shuffling: Answer choices (A, B, C, D) are randomized on the client side during rendering to prevent positional memorization; database tracks choice IDs rather than static letter strings.
+2. Sync & Event Log Architecture
+* Local-First with Optional Cloud Sync (Option C): Users can study immediately without creating an account.
+* Append-Only Attempt History: Every interaction (study answer or practice exam attempt) is logged with an immutable UUID, timestamp, selected choice ID, and mode (study or practice_exam).
+* Conflict-Free Sync: When signing in or syncing, unsynced local events are pushed to Django in batch and inserted with conflict ignoring, enabling comprehensive longitudinal progress reports.
+3. Study & Spaced Repetition Engine (Hybrid Option C)
+* Continuous Weighted Queue: Combines dynamic bucket weights (Unseen, Needs Work, Learning, Mastered) to allow infinite self-paced cramming without blocking users.
+* Time-Decay Multiplier: Automatically reintroduces Mastered questions into the review queue if they haven't been practiced within a specified time window.
+4. Exam Simulator & Analytics Engine
+* Blueprint-Weighted Mock Exams: Strictly enforces official NCVEC sub-element quotas (e.g., 35 questions for Tech/General requiring 26/35 correct; 50 questions for Extra requiring 37/50 correct).
+* Targeted "Drill My Mistakes" Mode: Aggregates failed attempts from past exams and study sessions into a one-click rescue mode targeting exact weak spots.
