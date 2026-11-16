@@ -1,122 +1,121 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { AppProvider, useApp } from './context/AppContext';
+import { Navbar } from './components/Navbar';
+import { DashboardView } from './pages/DashboardView';
+import { StudyView } from './pages/StudyView';
+import { SettingsView } from './pages/SettingsView';
+import { Award, AlertCircle, BarChart3 } from 'lucide-react';
 
-function App() {
-  const [count, setCount] = useState(0)
+type Tab = 'dashboard' | 'study' | 'mock' | 'mistakes' | 'analytics' | 'settings';
+
+const AppContent: React.FC = () => {
+  const [currentTab, setCurrentTab] = useState<Tab>('dashboard');
+  const { bucketCounts } = useApp();
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+      <Navbar currentTab={currentTab} setCurrentTab={setCurrentTab} />
 
-      <div className="ticks"></div>
+      <main className="flex-1 pb-16">
+        {currentTab === 'dashboard' && (
+          <DashboardView
+            onStartStudy={() => setCurrentTab('study')}
+            onStartMock={() => setCurrentTab('mock')}
+            onStartMistakes={() => setCurrentTab('mistakes')}
+            onOpenAnalytics={() => setCurrentTab('analytics')}
+          />
+        )}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {currentTab === 'study' && (
+          <StudyView onBackToDashboard={() => setCurrentTab('dashboard')} />
+        )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {currentTab === 'mock' && (
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 text-center space-y-4">
+            <div className="mx-auto w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center border border-purple-200">
+              <Award className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900">Official Blueprint Mock Exam</h2>
+            <p className="text-sm text-slate-500 max-w-lg mx-auto">
+              Simulates official FCC examination session rules with strict NCVEC sub-element quotas, countdown timer, and withheld feedback.
+            </p>
+            <div className="pt-4 flex justify-center space-x-3">
+              <button
+                onClick={() => setCurrentTab('study')}
+                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl"
+              >
+                Study First
+              </button>
+              <button
+                onClick={() => setCurrentTab('dashboard')}
+                className="px-6 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl"
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          </div>
+        )}
+
+        {currentTab === 'mistakes' && (
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 text-center space-y-4">
+            <div className="mx-auto w-16 h-16 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center border border-rose-200">
+              <AlertCircle className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900">Targeted "Drill My Mistakes" Mode</h2>
+            <p className="text-sm text-slate-500 max-w-lg mx-auto">
+              {bucketCounts.mistakesCount > 0
+                ? `You have ${bucketCounts.mistakesCount} questions in your rescue queue. Questions stay here until answered correctly twice in a row.`
+                : 'No mistakes currently pending. Good job! Missed questions from study sessions or mock exams will automatically show up here.'}
+            </p>
+            <div className="pt-4 flex justify-center space-x-3">
+              <button
+                onClick={() => setCurrentTab('study')}
+                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl"
+              >
+                Practice in Study Mode
+              </button>
+              <button
+                onClick={() => setCurrentTab('dashboard')}
+                className="px-6 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl"
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          </div>
+        )}
+
+        {currentTab === 'analytics' && (
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 text-center space-y-4">
+            <div className="mx-auto w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center border border-blue-200">
+              <BarChart3 className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900">Analytics & Longitudinal Reporting</h2>
+            <p className="text-sm text-slate-500 max-w-lg mx-auto">
+              Calculates readiness scores, sub-element topic radar, score trends over time, and ranked weak spots from your attempt history.
+            </p>
+            <div className="pt-4 flex justify-center space-x-3">
+              <button
+                onClick={() => setCurrentTab('dashboard')}
+                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl"
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          </div>
+        )}
+
+        {currentTab === 'settings' && <SettingsView />}
+      </main>
+    </div>
+  );
+};
+
+export function App() {
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
+  );
 }
 
-export default App
+export default App;
