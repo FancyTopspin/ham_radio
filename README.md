@@ -42,6 +42,7 @@ The application includes the complete, official **National Council of Volunteer 
 - **Official FCC Syllabus Hierarchy**: Questions are systematically categorized into FCC **SubElements** (e.g., `E1 Commission Rules`, `E2 Operating Procedures`) and subdivided into **SubGroup Lessons** (e.g., `Lesson 1: E1A Frequency Privileges`, `Lesson 2: E1B Operating Rules`).
 - **Circular Mastery Gauges**: Visual circular progress rings (`0%` to `100%`) for every individual lesson, mirroring top mobile learning applications.
 - **Instant Search & Filter**: Filter lessons by SubElement or search dynamically by keyword (e.g., *Satellite*, *Propagation*, *Smith Chart*).
+- **Official Schematic & Circuit Diagrams**: High-resolution diagrams (Figures T-1..T-3, G7-1, E5-1..E9-3) rendered directly in study cards, practice quizzes, and blueprint mock exams, with Django Admin manual upload override support.
 
 ### 2. Dual Learning Modes
 - 📖 **Read & Study Mode (Passive Review)**:

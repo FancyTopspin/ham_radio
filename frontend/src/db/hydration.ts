@@ -6,8 +6,9 @@ const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 export async function hydratePoolQuestions(classType: LicenseClassType, force = false): Promise<number> {
   const existingCount = await db.questions.where('class_type').equals(classType).count();
   const hasRichExplanations = localStorage.getItem(`ham_rich_explanations_${classType}`) === 'v2';
+  const hasDiagrams = localStorage.getItem(`ham_diagrams_${classType}`) === 'v1';
   
-  if (existingCount > 0 && !force && hasRichExplanations) {
+  if (existingCount > 0 && !force && hasRichExplanations && hasDiagrams) {
     // Run time-decay check on already loaded questions
     await applyTimeDecay(classType);
     return existingCount;
@@ -75,6 +76,7 @@ export async function hydratePoolQuestions(classType: LicenseClassType, force = 
         await db.question_states.bulkPut(newStates);
       }
       localStorage.setItem(`ham_rich_explanations_${classType}`, 'v2');
+      localStorage.setItem(`ham_diagrams_${classType}`, 'v1');
     });
 
     await applyTimeDecay(classType);

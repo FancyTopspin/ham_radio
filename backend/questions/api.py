@@ -37,8 +37,8 @@ class QuestionOut(Schema):
 
     @staticmethod
     def resolve_diagram_image_url(obj):
-        diagram = obj.diagrams.filter(is_uploaded=True).first()
-        return diagram.image.url if diagram and diagram.image else None
+        url = obj.effective_diagram_url
+        return url if url else None
 
 
 class SubGroupOut(Schema):

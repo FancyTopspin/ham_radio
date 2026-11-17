@@ -71,6 +71,8 @@ class Question(models.Model):
     
     has_diagram = models.BooleanField(default=False, db_index=True)
     diagram_figure_name = models.CharField(max_length=100, blank=True, help_text="e.g. Figure T-1")
+    diagram_image_url = models.URLField(max_length=500, blank=True, default='', help_text="Retrieved official diagram image URL")
+    diagram_override_image = models.FileField(upload_to='diagrams/', blank=True, null=True, help_text="Manual override upload to replace remote diagram")
     shuffle_disabled = models.BooleanField(default=False, help_text="True if choices contain cross-letter references like 'Both A and B'")
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -82,6 +84,20 @@ class Question(models.Model):
 
     def __str__(self):
         return f"{self.question_code} ({self.correct_letter})"
+
+    @property
+    def effective_diagram_url(self) -> str:
+        if self.diagram_override_image:
+            return self.diagram_override_image.url
+        diag = self.diagrams.filter(is_uploaded=True).exclude(image='').first()
+        if diag and diag.image:
+            return diag.image.url
+        if self.diagram_image_url:
+            return self.diagram_image_url
+        if self.has_diagram and self.diagram_figure_name:
+            from .diagram_urls import get_official_diagram_url
+            return get_official_diagram_url(self.diagram_figure_name)
+        return ''
 
 
 class Choice(models.Model):
@@ -103,6 +119,7 @@ class QuestionDiagram(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='diagrams')
     figure_name = models.CharField(max_length=100, help_text="e.g. Figure T-1")
+    remote_url = models.URLField(max_length=500, blank=True, default='')
     image = models.FileField(upload_to='diagrams/', blank=True, null=True)
     is_uploaded = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

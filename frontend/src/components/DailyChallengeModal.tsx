@@ -247,14 +247,25 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({
             </div>
 
             {/* Figure / Diagram */}
-            {currentQ.question.has_diagram && currentQ.question.diagram_figure_name && (
-              <div className="my-2 p-3 bg-slate-50 border border-slate-200 rounded-xl text-center">
-                <span className="text-xs font-bold text-slate-500 block mb-1">
-                  Refer to Figure: {currentQ.question.diagram_figure_name}
+            {currentQ.question.has_diagram && (
+              <div className="my-2 p-3 bg-slate-50 border border-slate-200 rounded-2xl text-center space-y-2">
+                <span className="text-xs font-bold text-slate-700 block">
+                  {currentQ.question.diagram_figure_name || 'Schematic Diagram'}
                 </span>
-                <div className="text-xs text-slate-400 italic">
-                  [Schematic diagram rendered in pool figures]
-                </div>
+                {currentQ.question.diagram_image_url ? (
+                  <div className="bg-white p-2 rounded-xl border border-slate-200 inline-block shadow-xs max-w-full">
+                    <img
+                      src={currentQ.question.diagram_image_url}
+                      alt={currentQ.question.diagram_figure_name}
+                      className="max-h-56 mx-auto object-contain rounded-lg"
+                      loading="eager"
+                    />
+                  </div>
+                ) : (
+                  <div className="text-xs text-slate-400 italic">
+                    Refer to {currentQ.question.diagram_figure_name}
+                  </div>
+                )}
               </div>
             )}
 
