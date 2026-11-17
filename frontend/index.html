@@ -128,10 +128,12 @@
     }
     </script>
   </head>
-  <body>
-    <div id="root">
-      <!-- Semantic Static Fallback for Search Crawlers and AI Scraping Agents -->
-      <header style="padding: 20px; font-family: sans-serif; max-width: 900px; margin: 0 auto;">
+  <body class="bg-slate-900 text-slate-100">
+    <div id="root"></div>
+
+    <!-- Semantic Static Fallback for Search Crawlers and AI Scraping Agents (hidden from JS-enabled browsers) -->
+    <noscript>
+      <header style="padding: 24px; font-family: sans-serif; max-width: 900px; margin: 0 auto; color: #f8fafc; background-color: #0f172a;">
         <h1>OpenHam — FCC Amateur Radio License Study Platform</h1>
         <p>A modern, offline-first study platform to help you pass all three tiers of the US Federal Communications Commission (FCC) Amateur Radio Service exams: <strong>Technician Class (Element 2, 2026–2030)</strong>, <strong>General Class (Element 3, 2023–2027)</strong>, and <strong>Amateur Extra Class (Element 4, 2024–2028)</strong>.</p>
         
@@ -160,7 +162,7 @@
         <p>Includes passive read & study mode with emerald-highlighted answers, active recall quiz mode with smart choice shuffling, 4-stage Leitner spaced repetition (SRS) with 7-day retention decay, weak-spot mistake isolation drills, timed blueprint mock exams with question navigator, daily 5-question habit blitz, and national community callbook leaderboard.</p>
         <p>AI documentation index available at <a href="/llms.txt">llms.txt</a> and <a href="/llms-full.txt">llms-full.txt</a>.</p>
       </header>
-    </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
