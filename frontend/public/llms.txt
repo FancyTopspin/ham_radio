@@ -1,0 +1,28 @@
+# Ham Radio Prep — FCC Amateur Radio License Exam Preparation Platform
+
+> High-performance, offline-first web platform for studying and passing all three tiers of the United States Federal Communications Commission (FCC) Amateur Radio Service license examinations.
+
+Website URL: https://hamradio.privatedns.org
+Source Code: https://github.com/FancyTopspin/ham_radio
+License: MIT
+Question Pools: Official National Council of Volunteer Examiner Coordinators (NCVEC)
+
+## Question Pools Covered
+- **Technician Class (Element 2)**: 2022–2026 pool, 412 questions. Exam format: 35 questions, passing score 26/35 (74%). Grants VHF/UHF privileges.
+- **General Class (Element 3)**: 2023–2027 pool, 429 questions. Exam format: 35 questions, passing score 26/35 (74%). Grants worldwide HF band privileges.
+- **Amateur Extra Class (Element 4)**: 2024–2028 pool, 618 questions. Exam format: 50 questions, passing score 37/50 (74%). Grants all US amateur frequencies and modes.
+
+## Core Features & Pedagogical Capabilities
+- **Dual Learning Modes**:
+  - *Passive Read & Study Mode*: Browse full question pools with correct answers pre-selected in emerald green, accompanied by detailed conceptual explanations, formula derivations, schematic diagrams, and FCC Part 97 citations.
+  - *Active Recall Practice Mode*: Interactive quiz format with instant visual feedback, smart choice position shuffling (following NCVEC freeze guidelines for 'All of the above' / 'None of the above'), and streak tracking.
+- **Leitner Spaced Repetition (SRS)**: 4-stage mastery buckets (`Unseen`, `Needs Work`, `Learning`, `Mastered`) with 2-consecutive-correct promotion, 1-incorrect demotion, and 7-day memory retention decay.
+- **Strict Blueprint Mock Exams**: Timed practice tests adhering strictly to official NCVEC syllabus quotas (exactly 1 question per subgroup), with question navigator palette and review flagging.
+- **Mistakes Isolation Drill**: Missed questions are quarantined until answered correctly twice consecutively.
+- **Daily 5-Question Challenge**: Daily blitz drawing 5 diverse questions across syllabus subelements to build consecutive study streaks and award bonus XP.
+- **National Community Leaderboard**: Compare progress by XP, questions mastered, or study streak, with custom FCC Callsign registration.
+- **Offline-First Architecture**: Built on Dexie.js (IndexedDB) for zero-latency study without requiring an active internet connection, with optional cloud sync and Google OAuth 2.0 SSO.
+
+## Technical Architecture
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Dexie.js (IndexedDB), Recharts, KaTeX.
+- **Backend**: Django 5, Django Ninja REST API, SQLite, Gunicorn, Nginx reverse proxy with SSL.
