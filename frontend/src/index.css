@@ -5,10 +5,20 @@
   color-scheme: light dark;
 }
 
-body {
+html, body {
   margin: 0;
-  min-width: 320px;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   min-height: 100vh;
   background-color: #f8fafc;
   color: #0f172a;
+}
+
+#root {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  min-height: 100vh;
 }

@@ -69,6 +69,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
     EXTRA: 'Amateur Extra',
   };
 
+  const classShortLabels: Record<LicenseClassType, string> = {
+    TECH: 'Tech',
+    GEN: 'General',
+    EXTRA: 'Extra',
+  };
+
   const classDetails: Record<
     LicenseClassType,
     { name: string; element: string; questions: string; cycle: string; desc: string }
@@ -102,12 +108,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
         <div className="flex items-center justify-between h-14 sm:h-16 gap-2">
           
           {/* Logo & Brand */}
-          <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer shrink-0 min-w-0" onClick={() => setCurrentTab('dashboard')}>
-            <div className="p-1.5 sm:p-2 bg-blue-600 rounded-lg text-white shrink-0">
-              <Radio className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
+          <div className="flex items-center space-x-1.5 sm:space-x-3 cursor-pointer shrink-0" onClick={() => setCurrentTab('dashboard')}>
+            <div className="p-1 sm:p-2 bg-blue-600 rounded-lg text-white shrink-0">
+              <Radio className="w-3.5 h-3.5 sm:w-5 sm:h-5 animate-pulse" />
             </div>
-            <div className="shrink-0">
-              <span className="font-bold text-sm sm:text-lg tracking-tight whitespace-nowrap">Ham Radio Prep</span>
+            <div className="shrink-0 flex items-center">
+              <span className="font-extrabold text-xs sm:text-lg tracking-tight whitespace-nowrap">
+                Ham Radio<span className="hidden xs:inline sm:inline"> Prep</span>
+              </span>
               <span className="hidden lg:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded bg-blue-900 text-blue-200 border border-blue-700">
                 FCC / NCVEC
               </span>
@@ -196,26 +204,27 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
           </nav>
 
           {/* Right Action Cluster: Target Class Switcher + Sync + Auth */}
-          <div className="flex items-center space-x-1 sm:space-x-2.5 shrink-0">
+          <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
             {/* Class Dropdown Pill */}
             <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
                 onClick={() => setIsClassDropdownOpen(!isClassDropdownOpen)}
-                className="flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-blue-950/80 to-slate-800 hover:from-blue-900/90 hover:to-slate-750 border border-blue-500/40 hover:border-blue-400 text-white rounded-xl px-2 py-1.5 sm:px-3 sm:py-1.5 transition shadow-sm cursor-pointer group"
+                className="flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-blue-950/80 to-slate-800 hover:from-blue-900/90 hover:to-slate-750 border border-blue-500/40 hover:border-blue-400 text-white rounded-lg sm:rounded-xl px-1.5 py-1 sm:px-3 sm:py-1.5 transition shadow-sm cursor-pointer group"
                 aria-haspopup="true"
                 aria-expanded={isClassDropdownOpen}
                 title="Switch FCC License Class"
               >
                 <div className="p-0.5 sm:p-1 rounded-md bg-blue-600/30 text-blue-300 group-hover:bg-blue-600/50">
-                  <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400" />
+                  <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400" />
                 </div>
                 <div className="text-left">
-                  <span className="text-[10px] text-blue-300/80 uppercase font-semibold tracking-wider hidden sm:block leading-none">
+                  <span className="text-[9px] text-blue-300/80 uppercase font-semibold tracking-wider hidden sm:block leading-none">
                     Class
                   </span>
                   <span className="text-xs sm:text-sm font-bold text-white block leading-tight">
-                    {classLabels[activeClass]}
+                    <span className="sm:hidden">{classShortLabels[activeClass]}</span>
+                    <span className="hidden sm:inline">{classLabels[activeClass]}</span>
                   </span>
                 </div>
                 <ChevronDown
@@ -291,11 +300,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
               )}
             </div>
 
-            {/* Sync Status Button */}
+            {/* Sync Status Button - Compact on mobile (hidden when fully synced to save space) */}
             <button
               onClick={triggerManualSync}
               disabled={syncState.isSyncing}
-              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition cursor-pointer flex items-center space-x-1.5"
+              className={`p-1 sm:px-2.5 sm:py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition cursor-pointer flex items-center space-x-1.5 ${
+                syncState.unsyncedCount === 0 && !syncState.isSyncing ? 'hidden sm:flex' : 'flex'
+              }`}
               title={
                 syncState.isSyncing
                   ? 'Syncing with cloud...'
@@ -305,17 +316,17 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
               }
             >
               {syncState.isSyncing ? (
-                <RefreshCw className="w-3.5 h-3.5 text-blue-400 animate-spin" />
+                <RefreshCw className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-400 animate-spin" />
               ) : syncState.unsyncedCount > 0 ? (
                 <>
-                  <CloudOff className="w-3.5 h-3.5 text-amber-400" />
+                  <CloudOff className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400" />
                   <span className="hidden sm:inline text-xs text-amber-300 font-medium">
                     {syncState.unsyncedCount}
                   </span>
                 </>
               ) : (
                 <>
-                  <Cloud className="w-3.5 h-3.5 text-emerald-400" />
+                  <Cloud className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400" />
                   <span className="hidden sm:inline text-xs text-emerald-400 font-medium">
                     Synced
                   </span>
@@ -325,14 +336,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
 
             {/* Auth / Profile Area */}
             {currentUser ? (
-              <div className="flex items-center space-x-1 sm:space-x-2">
-                <div className="flex items-center space-x-1 bg-slate-800 border border-slate-700 px-2 py-1 rounded-lg text-xs font-semibold text-slate-200">
-                  <UserIcon className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                  <span className="max-w-[55px] sm:max-w-[120px] truncate">{currentUser.username}</span>
+              <div className="flex items-center space-x-0.5 sm:space-x-1.5">
+                <div className="flex items-center space-x-1 bg-slate-800 border border-slate-700 px-1.5 py-1 sm:px-2 sm:py-1 rounded-lg text-xs font-semibold text-slate-200">
+                  <UserIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-400 shrink-0" />
+                  <span className="max-w-[40px] sm:max-w-[120px] truncate text-[11px] sm:text-xs">{currentUser.username}</span>
                 </div>
                 <button
                   onClick={logout}
-                  className="p-1 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-slate-800 transition cursor-pointer"
+                  className="p-1 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-slate-800 transition cursor-pointer shrink-0"
                   title="Sign Out"
                 >
                   <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -341,10 +352,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
             ) : (
               <button
                 onClick={openAuthModal}
-                className="flex items-center space-x-1 text-xs font-medium px-2.5 py-1.5 sm:px-3 sm:py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition shadow-sm cursor-pointer whitespace-nowrap"
+                className="flex items-center space-x-1 text-xs font-medium px-2 py-1 sm:px-3 sm:py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition shadow-sm cursor-pointer whitespace-nowrap"
               >
-                <UserIcon className="w-3.5 h-3.5" />
-                <span className="hidden xs:inline sm:inline">Sign In</span>
+                <UserIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <span className="text-[11px] sm:text-xs">Sign In</span>
               </button>
             )}
 
@@ -360,40 +371,54 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
       </div>
 
       {/* Mobile Tab Bar */}
-      <div className="md:hidden flex justify-around border-t border-slate-800 bg-slate-900/95 py-2">
+      <div className="md:hidden grid grid-cols-6 border-t border-slate-800 bg-slate-900/95 py-1.5 px-0.5 text-center">
         <button
           onClick={() => setCurrentTab('dashboard')}
-          className={`text-xs px-2 py-1 ${currentTab === 'dashboard' ? 'text-blue-400 font-bold' : 'text-slate-400'}`}
+          className={`text-[11px] py-1 font-semibold truncate transition ${
+            currentTab === 'dashboard' ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+          }`}
         >
           Home
         </button>
         <button
           onClick={() => setCurrentTab('topics')}
-          className={`text-xs px-2 py-1 ${currentTab === 'topics' || currentTab === 'study_read' ? 'text-blue-400 font-bold' : 'text-slate-400'}`}
+          className={`text-[11px] py-1 font-semibold truncate transition ${
+            currentTab === 'topics' || currentTab === 'study_read'
+              ? 'text-blue-400 font-bold'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
         >
           Lessons
         </button>
         <button
           onClick={() => setCurrentTab('study')}
-          className={`text-xs px-2 py-1 ${currentTab === 'study' ? 'text-blue-400 font-bold' : 'text-slate-400'}`}
+          className={`text-[11px] py-1 font-semibold truncate transition ${
+            currentTab === 'study' ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+          }`}
         >
           Practice
         </button>
         <button
           onClick={() => setCurrentTab('mock')}
-          className={`text-xs px-2 py-1 ${currentTab === 'mock' ? 'text-blue-400 font-bold' : 'text-slate-400'}`}
+          className={`text-[11px] py-1 font-semibold truncate transition ${
+            currentTab === 'mock' ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+          }`}
         >
-          Mock Exam
+          Exam
         </button>
         <button
           onClick={() => setCurrentTab('mistakes')}
-          className={`text-xs px-2 py-1 ${currentTab === 'mistakes' ? 'text-rose-400 font-bold' : 'text-slate-400'}`}
+          className={`text-[11px] py-1 font-semibold truncate transition ${
+            currentTab === 'mistakes' ? 'text-rose-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+          }`}
         >
-          Mistakes ({bucketCounts.mistakesCount})
+          Mistakes{bucketCounts.mistakesCount > 0 ? ` (${bucketCounts.mistakesCount})` : ''}
         </button>
         <button
           onClick={() => setCurrentTab('analytics')}
-          className={`text-xs px-2 py-1 ${currentTab === 'analytics' ? 'text-blue-400 font-bold' : 'text-slate-400'}`}
+          className={`text-[11px] py-1 font-semibold truncate transition ${
+            currentTab === 'analytics' ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+          }`}
         >
           Stats
         </button>
