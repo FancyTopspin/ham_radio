@@ -69,7 +69,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* 3-Column Grid on ALL devices (1 clean row on mobile, never stacked!) */}
           <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 p-1 sm:p-1.5 bg-slate-950/70 backdrop-blur border border-slate-700/70 rounded-xl sm:rounded-2xl">
             {([
-              { id: 'TECH', label: 'Technician', shortLabel: 'Tech', element: 'Element 2', shortElement: 'El. 2', quota: '35Q Exam', cycle: '2022–2026' },
+              { id: 'TECH', label: 'Technician', shortLabel: 'Tech', element: 'Element 2', shortElement: 'El. 2', quota: '35Q Exam', cycle: '2026–2030' },
               { id: 'GEN', label: 'General', shortLabel: 'General', element: 'Element 3', shortElement: 'El. 3', quota: '35Q Exam', cycle: '2023–2027' },
               { id: 'EXTRA', label: 'Amateur Extra', shortLabel: 'Extra', element: 'Element 4', shortElement: 'El. 4', quota: '50Q Exam', cycle: '2024–2028' },
             ] as const).map((tier) => {

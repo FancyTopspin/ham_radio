@@ -8,7 +8,7 @@ License: MIT
 Question Pools: Official National Council of Volunteer Examiner Coordinators (NCVEC)
 
 ## Question Pools Covered
-- **Technician Class (Element 2)**: 2022–2026 pool, 412 questions. Exam format: 35 questions, passing score 26/35 (74%). Grants VHF/UHF privileges.
+- **Technician Class (Element 2)**: 2026–2030 pool, 409 questions. Exam format: 35 questions, passing score 26/35 (74%). Grants VHF/UHF privileges.
 - **General Class (Element 3)**: 2023–2027 pool, 429 questions. Exam format: 35 questions, passing score 26/35 (74%). Grants worldwide HF band privileges.
 - **Amateur Extra Class (Element 4)**: 2024–2028 pool, 618 questions. Exam format: 50 questions, passing score 37/50 (74%). Grants all US amateur frequencies and modes.
 

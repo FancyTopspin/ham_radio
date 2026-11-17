@@ -37,7 +37,7 @@ export const TopicsView: React.FC<TopicsViewProps> = ({
 
   // Class display info
   const classNames: Record<LicenseClassType, { level: string; name: string; cycle: string }> = {
-    TECH: { level: 'Level 1', name: 'Technician License', cycle: '2022–2026' },
+    TECH: { level: 'Level 1', name: 'Technician License', cycle: '2026–2030' },
     GEN: { level: 'Level 2', name: 'General License', cycle: '2023–2027' },
     EXTRA: { level: 'Level 3', name: 'Amateur Extra License', cycle: '2024–2028' },
   };

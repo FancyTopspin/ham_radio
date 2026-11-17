@@ -3,12 +3,23 @@ import type { LicenseClassType, Question, QuestionState } from '../types';
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
+const POOL_VERSIONS: Record<LicenseClassType, string> = {
+  TECH: '2026-2030_v1',
+  GEN: '2023-2027_v1',
+  EXTRA: '2024-2028_v1',
+};
+
 export async function hydratePoolQuestions(classType: LicenseClassType, force = false): Promise<number> {
+  const currentPoolVersion = POOL_VERSIONS[classType];
+  const storedVersion = localStorage.getItem(`ham_pool_version_${classType}`);
+  const versionMismatch = storedVersion !== currentPoolVersion;
+  const isForce = force || versionMismatch;
+
   const existingCount = await db.questions.where('class_type').equals(classType).count();
   const hasRichExplanations = localStorage.getItem(`ham_rich_explanations_${classType}`) === 'v2';
   const hasDiagrams = localStorage.getItem(`ham_diagrams_${classType}`) === 'v1';
   
-  if (existingCount > 0 && !force && hasRichExplanations && hasDiagrams) {
+  if (existingCount > 0 && !isForce && hasRichExplanations && hasDiagrams) {
     // Run time-decay check on already loaded questions
     await applyTimeDecay(classType);
     return existingCount;
@@ -29,8 +40,8 @@ export async function hydratePoolQuestions(classType: LicenseClassType, force = 
     }));
 
     await db.transaction('rw', [db.questions, db.choices, db.explanations, db.question_states], async () => {
-      // Clear old questions for this class if forcing refresh
-      if (force) {
+      // Clear old questions for this class if forcing refresh or version mismatch
+      if (isForce) {
         const oldIds = await db.questions.where('class_type').equals(classType).primaryKeys();
         await db.questions.bulkDelete(oldIds);
         await db.choices.where('question_id').anyOf(oldIds).delete();
@@ -77,6 +88,7 @@ export async function hydratePoolQuestions(classType: LicenseClassType, force = 
       }
       localStorage.setItem(`ham_rich_explanations_${classType}`, 'v2');
       localStorage.setItem(`ham_diagrams_${classType}`, 'v1');
+      localStorage.setItem(`ham_pool_version_${classType}`, currentPoolVersion);
     });
 
     await applyTimeDecay(classType);

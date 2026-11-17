@@ -84,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
       name: 'Technician',
       element: 'Element 2',
       questions: '35 Questions',
-      cycle: '2022–2026 Pool',
+      cycle: '2026–2030 Pool',
       desc: 'Entry-level VHF/UHF & basic privileges',
     },
     GEN: {

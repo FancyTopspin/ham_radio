@@ -30,7 +30,7 @@ The application includes the complete, official **National Council of Volunteer 
 
 | License Tier | Exam Element | Official Pool Cycle | Total Questions in Pool | Exam Length | Passing Score |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Technician Class** | Element 2 | 2022 – 2026 | **412** questions | 35 questions | **26 / 35 (74%)** |
+| **Technician Class** | Element 2 | 2026 – 2030 | **409** questions | 35 questions | **26 / 35 (74%)** |
 | **General Class** | Element 3 | 2023 – 2027 | **429** questions | 35 questions | **26 / 35 (74%)** |
 | **Amateur Extra Class** | Element 4 | 2024 – 2028 | **618** questions | 50 questions | **37 / 50 (74%)** |
 

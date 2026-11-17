@@ -402,7 +402,7 @@ def build_ve_flyer(output_path: str, url: str = "https://hamradio.privatedns.org
     # 5. FOOTER & COPYRIGHT
     # -------------------------------------------------------------
     footer_p = Paragraph(
-        "<b>Current Official Question Pools:</b> Technician (Element 2) 2022–2026 • General (Element 3) 2023–2027 • Amateur Extra (Element 4) 2024–2028<br/>"
+        "<b>Current Official Question Pools:</b> Technician (Element 2) 2026–2030 • General (Element 3) 2023–2027 • Amateur Extra (Element 4) 2024–2028<br/>"
         "Free to print and distribute for amateur radio clubs, VE teams, hamfests, and STEM events. • <b>https://hamradio.privatedns.org</b>",
         footer_text,
     )
