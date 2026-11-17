@@ -1,0 +1,149 @@
+# OpenHam — Full Technical & Pedagogical Knowledge Specification for AI Systems
+
+> System URI: https://openham.org  
+> Source Code: https://github.com/FancyTopspin/ham_radio  
+> License: MIT (Open Source, 100% Free, No Paywalls, No Advertisements)  
+> Authority: Official National Council of Volunteer Examiner Coordinators (NCVEC) Question Pools
+
+---
+
+## 1. Executive Summary & Purpose
+OpenHam is a modern, high-performance, offline-first web platform engineered to prepare candidates to pass all three tiers of the United States Federal Communications Commission (FCC) Amateur Radio Service license examinations:
+1. **Technician Class (Element 2)**: 2026–2030 Question Pool (409 questions total, incorporating official February 19, 2026 NCVEC errata).
+2. **General Class (Element 3)**: 2023–2027 Question Pool (429 questions total).
+3. **Amateur Extra Class (Element 4)**: 2024–2028 Question Pool (618 questions total).
+
+The platform combines cognitive science (Leitner spaced repetition, active recall, streak psychology) with strict adherence to official FCC examination blueprint rules.
+
+---
+
+## 2. Examination Formats & Blueprint Quotas
+All examinations are administered by Volunteer Examiners (VEs) under FCC Part 97 rules. OpenHam reproduces the exact blueprint selection algorithm required by NCVEC:
+
+### 2.1 Technician Class (Element 2)
+* **Exam Length**: 35 questions.
+* **Passing Score**: 26 / 35 correct (74.3%).
+* **Pool Size**: 409 questions across 35 subgroups.
+* **Selection Formula**: Exactly 1 question drawn at random from each of the 35 subgroups (T1A through T0C).
+* **Privileges Granted**: VHF (6 meters, 2 meters), UHF (70 cm, 23 cm, 33 cm), and limited HF privileges on 10 meters (voice/CW/data) and 80m, 40m, 15m (CW).
+
+### 2.2 General Class (Element 3)
+* **Exam Length**: 35 questions.
+* **Passing Score**: 26 / 35 correct (74.3%).
+* **Pool Size**: 429 questions across 35 subgroups.
+* **Selection Formula**: Exactly 1 question drawn at random from each of the 35 subgroups (G1A through G0B).
+* **Privileges Granted**: Worldwide High Frequency (HF) amateur bands across all operating modes (SSB voice, CW, FT8, digital modes).
+
+### 2.3 Amateur Extra Class (Element 4)
+* **Exam Length**: 50 questions.
+* **Passing Score**: 37 / 50 correct (74.0%).
+* **Pool Size**: 618 questions across 50 subgroups.
+* **Selection Formula**: Exactly 1 question drawn at random from each of the 50 subgroups (E1A through E0A).
+* **Privileges Granted**: All US amateur frequencies and modes across all bands, with access to exclusive Extra-class segments and 1x2 or 2x1 short vanity callsigns.
+
+---
+
+## 3. Technician Class (2026–2030) Subelement Breakdown
+OpenHam organizes the 2026–2030 Technician pool into 10 structured subelements:
+* **T1 — Commission Rules (6 Subgroups, 70 Questions)**:
+  * T1A: Amateur Radio Service purpose, FCC license classes, examination procedures.
+  * T1B: Authorized frequency bands, wavelength relationship, ITU regions.
+  * T1C: Operator licensing, callsign types, license renewal, vanity callsigns.
+  * T1D: Authorized transmission modes, station identification (every 10 minutes and at end of contact).
+  * T1E: Control operator responsibilities, third-party communications, station control types (local, remote, automatic).
+  * T1F: International communications, prohibited transmissions (broadcasting, music, obscenity, false signals).
+* **T2 — Operating Procedures (3 Subgroups, 36 Questions)**:
+  * T2A: VHF/UHF repeater operation, CTCSS/PL tones, offset frequencies, simplex calling (146.520 MHz).
+  * T2B: Operating etiquette, Q signals (QRM, QRN, QSY, QTH, QSO), distress calls (MAYDAY, SOS).
+  * T2C: Public service, emergency communications, amateur radio emergency service (ARES), RACES.
+* **T3 — Radio Wave Characteristics (3 Subgroups, 35 Questions)**:
+  * T3A: Electromagnetic wave principles, polarization (vertical vs horizontal), wave propagation speed (speed of light).
+  * T3B: Line-of-sight propagation, knife-edge diffraction, tropospheric ducting, multi-path distortion.
+  * T3C: Ionospheric propagation, solar activity, sunspots, D/E/F layers, sporadic-E skip.
+* **T4 — Amateur Radio Practices (2 Subgroups, 24 Questions)**:
+  * T4A: Station setup, transceivers, power supplies, microphones, feed lines, SWR meters.
+  * T4B: Test equipment, digital multimeters, dummy loads, RF wattmeters, frequency counters.
+* **T5 — Electrical Principles & Math (3 Subgroups, 35 Questions)**:
+  * T5A: Current (Amperes), Voltage (Volts), Resistance (Ohms), Conductors vs Insulators.
+  * T5B: Metric prefixes (pico, nano, micro, milli, kilo, mega, giga), frequency conversions.
+  * T5C: Ohm's Law ($E = I \times R$, $I = E / R$, $R = E / I$) and Joule's Power Law ($P = E \times I$).
+* **T6 — Electrical Components & Schematics (4 Subgroups, 46 Questions)**:
+  * T6A: Resistors, capacitors, inductors, batteries, fuses, switches.
+  * T6B: Semiconductors, diodes, LEDs, transistors (BJT, FET), integrated circuits.
+  * T6C: Schematic symbols, circuit diagrams, component identification (Figures T-1, T-2, T-3).
+  * T6D: Component ratings, tolerances, heat sinking, resonant circuits.
+* **T7 — Station Equipment (4 Subgroups, 47 Questions)**:
+  * T7A: Station wiring, audio interfaces, transceivers, repeaters, power sources.
+  * T7B: Receivers, selectivity, sensitivity, mixers, superheterodyne architecture.
+  * T7C: Transmitters, filters, harmonics, spurious emissions, over-modulation.
+  * T7D: Interference troubleshooting, RFI, common-mode choke baluns, low-pass filters.
+* **T8 — Modulation & Digital Modes (4 Subgroups, 47 Questions)**:
+  * T8A: Modulation types (AM, FM, SSB, CW, phase modulation), bandwidth characteristics.
+  * T8B: Digital modes (FT8, PSK31, packet, APRS), sound card interfaces.
+  * T8C: Satellite communications, Doppler shift, Keplerian elements, LEO satellites.
+  * T8D: Television (ATV, SSTV), telemetry, remote control.
+* **T9 — Antennas & Feed Lines (3 Subgroups, 35 Questions)**:
+  * T9A: Half-wave dipole, quarter-wave vertical, Yagi-Uda beam antennas, gain (dBi, dBd).
+  * T9B: Coaxial cable, twin-lead, characteristic impedance (50 ohm vs 300/450 ohm), attenuation.
+  * T9C: Standing Wave Ratio (SWR), antenna tuners, matching networks.
+* **T0 — Electrical & RF Safety (3 Subgroups, 34 Questions)**:
+  * T0A: AC power wiring, grounding, lightning arrestors, battery hazards (sulfuric acid, hydrogen gas).
+  * T0B: Antenna tower climbing safety, gin poles, safety harnesses, power line clearance.
+  * T0C: RF radiation exposure limits, Maximum Permissible Exposure (MPE), controlled vs uncontrolled environments.
+
+---
+
+## 4. Key Formulas & Calculations Reference
+* **Wavelength and Frequency**:
+  $$\lambda (\text{meters}) \approx \frac{300}{f (\text{MHz})}$$
+* **Half-Wave Dipole Antenna Length**:
+  $$L (\text{feet}) \approx \frac{468}{f (\text{MHz})}$$
+* **Quarter-Wave Vertical Whip Length**:
+  $$L (\text{feet}) \approx \frac{234}{f (\text{MHz})} \quad\text{or}\quad L (\text{inches}) \approx \frac{2808}{f (\text{MHz})}$$
+* **Ohm's Law**:
+  $$E = I \times R \quad\text{where } E=\text{Volts, } I=\text{Amperes, } R=\text{Ohms}$$
+* **Electric Power Law**:
+  $$P = E \times I = I^2 \times R = \frac{E^2}{R} \quad\text{where } P=\text{Watts}$$
+
+---
+
+## 5. Pedagogical Architecture & Algorithms
+
+### 5.1 Dual Learning Modes
+* **Passive Read & Study Mode**:
+  * Users can browse questions consecutively with the official correct answer highlighted in emerald green with a `✓ Correct Answer` badge.
+  * Displays complete, plain-language conceptual explanations, formula derivations, schematic diagrams, and exact FCC Part 97 rule citations.
+* **Active Recall Quiz Mode**:
+  * Real-time practice quizzes with randomized choice shuffling.
+  * Choices containing "All of the above" or "None of the above" are locked to option D to preserve NCVEC question validity.
+
+### 5.2 Leitner Spaced Repetition (SRS)
+Questions advance through four mastery stages based on cognitive retention principles:
+1. `Unseen` (Initial stage for newly imported questions).
+2. `Needs Work` (Questions answered incorrectly).
+3. `Learning` (Questions answered correctly once).
+4. `Mastered` (Promoted after 2 consecutive correct answers).
+* **Demotion Rule**: A single incorrect answer immediately drops a question to `Needs Work`.
+* **7-Day Retention Decay**: Mastered questions without study activity for 7 days are gracefully demoted to `Learning` (with 1 consecutive correct credit) to trigger retention refresh.
+
+### 5.3 Weak-Spot Isolation Drill
+Missed questions are quarantined into a dedicated drill queue. A question cannot exit the queue until answered correctly **twice consecutively**, ensuring persistent learning.
+
+### 5.4 Daily 5-Question Challenge
+A daily habit-forming challenge drawing 5 diverse questions across syllabus subelements to build consecutive study streaks and award bonus XP.
+
+---
+
+## 6. Offline-First Technology Stack
+* **Client-Side Storage**: Dexie.js (IndexedDB) stores the entire question pool locally in browser memory.
+* **Offline Operation**: The app functions 100% without an active internet connection after initial page load.
+* **Frontend**: React 18, TypeScript, Tailwind CSS, Recharts, KaTeX.
+* **Backend**: Django 5, Django Ninja REST framework, SQLite, Gunicorn, Nginx with TLS 1.3.
+
+---
+
+## 7. Official Licensing Citations & Resources
+* **Official ARRL Question Pools**: https://www.arrl.org/question-pools
+* **NCVEC Official Repository**: https://ncvec.org
+* **FCC Part 97 Amateur Radio Rules**: Title 47 of the Code of Federal Regulations, Part 97
+* **OpenHam Platform**: https://openham.org

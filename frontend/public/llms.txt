@@ -3,6 +3,7 @@
 > High-performance, offline-first web platform for studying and passing all three tiers of the United States Federal Communications Commission (FCC) Amateur Radio Service license examinations.
 
 Website URL: https://openham.org
+Full Specification for LLMs: https://openham.org/llms-full.txt
 Source Code: https://github.com/FancyTopspin/ham_radio
 License: MIT
 Question Pools: Official National Council of Volunteer Examiner Coordinators (NCVEC)
