@@ -1,11 +1,22 @@
 # 📻 Ham Radio Prep — FCC Amateur Radio License Exam Preparation Platform
 
+[![Live App](https://img.shields.io/badge/🌐_Live_Website-hamradio.privatedns.org-2563eb?style=for-the-badge&logo=google-chrome&logoColor=white)](https://hamradio.privatedns.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/Frontend-React%2018%20%7C%20TypeScript%20%7C%20Vite-61dafb?logo=react)](frontend/)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38b2ac?logo=tailwind-css)](https://tailwindcss.com/)
 [![Django](https://img.shields.io/badge/Backend-Django%205%20%7C%20Django%20Ninja-092e20?logo=django)](backend/)
 [![IndexedDB](https://img.shields.io/badge/Offline--First-Dexie.js%20(IndexedDB)-purple)](https://dexie.org/)
 [![FCC / NCVEC Pools](https://img.shields.io/badge/Question%20Pools-Technician%20%7C%20General%20%7C%20Extra-green)](#license-question-pools-covered)
+
+---
+
+### 🌐 Live Web Application
+
+> ### 🔗 Access the Live App: [**https://hamradio.privatedns.org**](https://hamradio.privatedns.org)
+>
+> **Instant Browser Access** — Study the complete official FCC question pools directly in your browser with zero setup, full offline support, and automatic cloud progress synchronization.
+
+---
 
 A modern, high-performance, offline-first web platform engineered to help candidates prepare for and pass all three tiers of the **United States Federal Communications Commission (FCC) Amateur Radio Service** examinations. 
 
