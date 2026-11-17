@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import {
   BarChart3, Award, Flame, CheckCircle, AlertTriangle,
-  ArrowLeft, RefreshCw
+  ArrowLeft, RefreshCw, Trophy
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { computeClassAnalytics, type AnalyticsSummary } from '../engine/analyticsEngine';
@@ -13,9 +13,10 @@ import { computeClassAnalytics, type AnalyticsSummary } from '../engine/analytic
 interface AnalyticsViewProps {
   onBackToDashboard: () => void;
   onStartStudyTopic?: (topicCode: string) => void;
+  onOpenLeaderboard?: () => void;
 }
 
-export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onBackToDashboard }) => {
+export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onBackToDashboard, onOpenLeaderboard }) => {
   const { activeClass } = useApp();
   const [data, setData] = useState<AnalyticsSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,6 +69,16 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onBackToDashboard 
             </p>
           </div>
         </div>
+
+        {onOpenLeaderboard && (
+          <button
+            onClick={onOpenLeaderboard}
+            className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow transition flex items-center space-x-1.5 cursor-pointer"
+          >
+            <Trophy className="w-4 h-4 text-white" />
+            <span>Community Leaderboard</span>
+          </button>
+        )}
       </div>
 
       {/* Top 3 KPI Summary Cards */}

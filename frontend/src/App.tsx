@@ -9,11 +9,14 @@ import { MockExamView } from './pages/MockExamView';
 import { MistakeDrillView } from './pages/MistakeDrillView';
 import { SettingsView } from './pages/SettingsView';
 import { AnalyticsView } from './pages/AnalyticsView';
+import { LeaderboardView } from './pages/LeaderboardView';
+import { DailyChallengeModal } from './components/DailyChallengeModal';
 import type { TopicLessonInfo } from './types';
 
 const AppContent: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [selectedTopic, setSelectedTopic] = useState<TopicLessonInfo | null>(null);
+  const [isDailyChallengeOpen, setIsDailyChallengeOpen] = useState(false);
 
   const handleSelectStudyTopic = (topic: TopicLessonInfo) => {
     setSelectedTopic(topic);
@@ -50,6 +53,8 @@ const AppContent: React.FC = () => {
             onStartMistakes={() => setCurrentTab('mistakes')}
             onOpenAnalytics={() => setCurrentTab('analytics')}
             onOpenTopics={() => setCurrentTab('topics')}
+            onOpenDailyChallenge={() => setIsDailyChallengeOpen(true)}
+            onOpenLeaderboard={() => setCurrentTab('leaderboard')}
           />
         )}
 
@@ -94,11 +99,28 @@ const AppContent: React.FC = () => {
         )}
 
         {currentTab === 'analytics' && (
-          <AnalyticsView onBackToDashboard={() => setCurrentTab('dashboard')} />
+          <AnalyticsView
+            onBackToDashboard={() => setCurrentTab('dashboard')}
+            onOpenLeaderboard={() => setCurrentTab('leaderboard')}
+          />
+        )}
+
+        {currentTab === 'leaderboard' && (
+          <LeaderboardView
+            onBackToDashboard={() => setCurrentTab('dashboard')}
+            onOpenDailyChallenge={() => setIsDailyChallengeOpen(true)}
+          />
         )}
 
         {currentTab === 'settings' && <SettingsView />}
       </main>
+
+      {/* Daily Challenge 5-Question Blitz Modal */}
+      <DailyChallengeModal
+        isOpen={isDailyChallengeOpen}
+        onClose={() => setIsDailyChallengeOpen(false)}
+        onOpenLeaderboard={() => setCurrentTab('leaderboard')}
+      />
     </div>
   );
 };

@@ -1,6 +1,19 @@
 import React from 'react';
-import { BookOpen, Award, AlertCircle, Sparkles, RefreshCw, FileText, GraduationCap, MessageSquare, Layers } from 'lucide-react';
+import {
+  BookOpen,
+  Award,
+  AlertCircle,
+  Sparkles,
+  RefreshCw,
+  FileText,
+  GraduationCap,
+  MessageSquare,
+  Layers,
+  Flame,
+  Trophy,
+} from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { getStreakInfo } from '../engine/dailyChallengeEngine';
 import type { LicenseClassType } from '../types';
 
 interface DashboardViewProps {
@@ -9,6 +22,8 @@ interface DashboardViewProps {
   onStartMistakes: () => void;
   onOpenAnalytics: () => void;
   onOpenTopics?: () => void;
+  onOpenDailyChallenge?: () => void;
+  onOpenLeaderboard?: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -16,8 +31,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onStartMock,
   onStartMistakes,
   onOpenTopics,
+  onOpenDailyChallenge,
+  onOpenLeaderboard,
 }) => {
   const { activeClass, setActiveClass, bucketCounts, forceRefreshPool, isHydrating, openFeedbackModal } = useApp();
+  const streakInfo = getStreakInfo(activeClass);
 
   const classDisplay: Record<LicenseClassType, { name: string; quota: number; pass: number }> = {
     TECH: { name: 'Technician Class', quota: 35, pass: 26 },
@@ -145,6 +163,57 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </button>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Daily Challenge & Leaderboard Spotlight Card */}
+      <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-4 sm:p-6 text-white shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center space-x-3 sm:space-x-4 w-full md:w-auto">
+          <div className="p-3 bg-white/20 backdrop-blur rounded-2xl shrink-0">
+            <Flame className="w-7 h-7 sm:w-8 sm:h-8 text-white fill-white animate-pulse" />
+          </div>
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="font-extrabold text-base sm:text-lg">
+                Daily 5-Question Challenge
+              </span>
+              <span className="px-2 py-0.5 bg-black/20 rounded-full text-[10px] sm:text-xs font-bold text-amber-100 flex items-center space-x-1">
+                <Flame className="w-3 h-3 text-amber-300 fill-amber-300" />
+                <span>{streakInfo.currentStreak} Day Streak</span>
+              </span>
+            </div>
+            <p className="text-amber-100 text-xs sm:text-sm mt-0.5">
+              {streakInfo.isCompletedToday
+                ? `✓ Completed today (${streakInfo.todayScore?.score || 5}/5)! Come back tomorrow to keep your streak alive.`
+                : 'Quick 2-minute daily blitz to build your streak and earn +50 XP on the community leaderboard.'}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2.5 w-full md:w-auto justify-end">
+          {onOpenLeaderboard && (
+            <button
+              onClick={onOpenLeaderboard}
+              className="px-3.5 py-2.5 bg-white/15 hover:bg-white/25 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center space-x-1.5 cursor-pointer backdrop-blur"
+            >
+              <Trophy className="w-4 h-4 text-amber-200" />
+              <span>Leaderboard</span>
+            </button>
+          )}
+
+          {onOpenDailyChallenge && (
+            <button
+              onClick={onOpenDailyChallenge}
+              className={`px-4 sm:px-5 py-2.5 font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center space-x-1.5 cursor-pointer ${
+                streakInfo.isCompletedToday
+                  ? 'bg-amber-900/60 text-amber-200 hover:bg-amber-900/80'
+                  : 'bg-white text-orange-600 hover:bg-amber-50 shadow-orange-700/30'
+              }`}
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>{streakInfo.isCompletedToday ? 'Review Challenge' : 'Play Today’s Blitz'}</span>
+            </button>
+          )}
         </div>
       </div>
 

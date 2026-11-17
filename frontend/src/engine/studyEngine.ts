@@ -23,7 +23,7 @@ export async function recordAttempt(
   selectedChoiceId: string,
   isCorrect: boolean,
   durationMs: number,
-  mode: 'study' | 'mock_exam' | 'mistake_drill'
+  mode: 'study' | 'mock_exam' | 'mistake_drill' | 'daily_challenge'
 ): Promise<TransitionResult> {
   const now = Date.now();
   const attemptId = crypto.randomUUID();

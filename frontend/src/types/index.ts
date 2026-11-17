@@ -55,7 +55,7 @@ export interface AttemptEvent {
   question_code?: string;
   selected_choice_id: string;
   is_correct: boolean;
-  mode: 'study' | 'mock_exam' | 'mistake_drill';
+  mode: 'study' | 'mock_exam' | 'mistake_drill' | 'daily_challenge';
   duration_ms: number;
   created_at: string; // ISO string
   synced: boolean;

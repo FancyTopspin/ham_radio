@@ -16,11 +16,12 @@ import {
   Check,
   MessageSquare,
   Layers,
+  Trophy,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { LicenseClassType } from '../types';
 
-export type NavTab = 'dashboard' | 'topics' | 'study_read' | 'study' | 'mock' | 'mistakes' | 'analytics' | 'settings';
+export type NavTab = 'dashboard' | 'topics' | 'study_read' | 'study' | 'mock' | 'mistakes' | 'analytics' | 'settings' | 'leaderboard';
 
 interface NavbarProps {
   currentTab: NavTab;
@@ -183,6 +184,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
             >
               <BarChart3 className="w-4 h-4" />
               <span>Analytics</span>
+            </button>
+            <button
+              onClick={() => setCurrentTab('leaderboard')}
+              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
+                currentTab === 'leaderboard' ? 'bg-amber-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+              }`}
+            >
+              <Trophy className="w-4 h-4 text-amber-400" />
+              <span>Leaderboard</span>
             </button>
             <button
               onClick={() => setCurrentTab('settings')}

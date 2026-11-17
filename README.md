@@ -63,22 +63,33 @@ The application includes the complete, official **National Council of Volunteer 
 - **Strict FCC VEC Quotas**: Generates realistic practice exams selecting exactly 1 question per SubGroup according to official NCVEC syllabus formulas (35 questions for Tech/General, 50 questions for Extra).
 - **Exam Features**: Timed countdown clock, color-coded question navigator palette, question flagging for review, instant scoring, and pass/fail assessment.
 
-### 5. Mistakes Queue & Weak-Spot Isolation
+### 5. 🔥 Daily 5-Question Challenge & Streak Engine
+- **Deterministic Daily Blitz**: 5 distinct questions drawn daily across diverse syllabus subelements for each license pool, ensuring quick, consistent habit formation.
+- **Daily Streak Tracking**: Animated streak flame (`🔥 1 Day`, `🔥 7 Days`, etc.), longest streak record, and daily XP bonuses (+50 XP).
+- **Instant Mastery Integration**: Answers seamlessly feed into the Leitner SRS engine and mistake drills.
+
+### 6. 🏆 Community Leaderboard & Amateur Callbook
+- **National Rankings**: Compete with fellow amateur radio candidates and licensed operators across the nation based on **Total XP**, **Questions Mastered**, or **Daily Streak**.
+- **Amateur Radio Callsigns**: Operators can register or customize their FCC Callsign (e.g., `W1AW`, `KC3WSO`) or custom Elmer handle.
+- **Top 3 Podium & Standing Banner**: Displays gold, silver, and bronze podium finishers with avatar badges and a persistent personal rank banner.
+- **Multi-Class Filtering**: Filter standings by `All Pools`, `Technician`, `General`, or `Amateur Extra`.
+
+### 7. Mistakes Queue & Weak-Spot Isolation
 - Any missed question is automatically isolated into a dedicated **Mistakes Queue**.
 - Questions remain in the drill queue until answered correctly **twice consecutively**, ensuring stubborn knowledge gaps are eradicated.
 
-### 6. Offline-First Architecture & Cloud Sync
+### 8. Offline-First Architecture & Cloud Sync
 - **Local IndexedDB Hydration**: Powered by **Dexie.js**. Complete question pools, choices, and explanations are hydrated locally, enabling lightning-fast, latency-free practice even without an internet connection.
 - **Background Cloud Synchronization**: Automatically syncs question attempts and study states with the Django backend whenever connectivity is restored.
 
-### 7. Google OAuth & Account Management
+### 9. Google OAuth & Account Management
 - **Single Sign-On (SSO)**: One-click registration and sign-in via **Google OAuth 2.0** (`django-allauth`), alongside standard username/password authentication.
 
-### 8. Multi-Channel Feedback & Community System
+### 10. Multi-Channel Feedback & Community System
 - In-app feedback system for reporting typos, question inaccuracies, or feature requests.
 - "I Passed My Exam!" celebration flow for sharing success stories.
 
-### 9. Printable VE Handout Flyer (PDF)
+### 11. Printable VE Handout Flyer (PDF)
 - Automatically generated 1-page printable PDF flyer with QR codes, licensing checklist, and local club notes for Volunteer Examiners (VEs) and ham radio club events.
 
 ---

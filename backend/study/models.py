@@ -58,3 +58,61 @@ class UserClassProgress(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.class_type} Progress"
+
+
+class DailyChallengeRecord(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='daily_challenges'
+    )
+    device_id = models.CharField(max_length=64, blank=True, default='')
+    class_type = models.CharField(max_length=10, default='TECH')
+    challenge_date = models.DateField(db_index=True)
+    score = models.IntegerField(default=0)
+    total = models.IntegerField(default=5)
+    streak_count = models.IntegerField(default=1)
+    xp_earned = models.IntegerField(default=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-challenge_date', '-created_at']
+
+    def __str__(self):
+        user_str = self.user.username if self.user else f"Guest ({self.device_id[:8]})"
+        return f"{user_str} - {self.challenge_date} ({self.score}/{self.total}) Streak: {self.streak_count}"
+
+
+class LeaderboardProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='leaderboard_profile'
+    )
+    device_id = models.CharField(max_length=64, blank=True, db_index=True)
+    callsign = models.CharField(max_length=16, blank=True, default='')
+    display_name = models.CharField(max_length=64, default='Ham Cadet')
+    avatar_color = models.CharField(max_length=32, default='blue')
+    is_bot = models.BooleanField(default=False)
+
+    # Aggregated Stats
+    xp = models.IntegerField(default=0, db_index=True)
+    mastered_count = models.IntegerField(default=0, db_index=True)
+    streak_days = models.IntegerField(default=0, db_index=True)
+    accuracy = models.FloatField(default=0.0)
+    exams_passed = models.IntegerField(default=0)
+    primary_class = models.CharField(max_length=10, default='TECH')
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-xp', '-streak_days']
+
+    def __str__(self):
+        name = self.callsign or self.display_name
+        return f"{name} - {self.xp} XP ({self.streak_days}d streak)"
+
