@@ -1,6 +1,6 @@
-# 📻 Ham Radio Prep — FCC Amateur Radio License Exam Preparation Platform
+# 📻 OpenHam — FCC Amateur Radio License Exam Preparation Platform
 
-[![Live App](https://img.shields.io/badge/🌐_Live_Website-hamradio.privatedns.org-2563eb?style=for-the-badge&logo=google-chrome&logoColor=white)](https://hamradio.privatedns.org)
+[![Live App](https://img.shields.io/badge/🌐_Live_Website-openham.org-2563eb?style=for-the-badge&logo=google-chrome&logoColor=white)](https://openham.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/Frontend-React%2018%20%7C%20TypeScript%20%7C%20Vite-61dafb?logo=react)](frontend/)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38b2ac?logo=tailwind-css)](https://tailwindcss.com/)
@@ -12,7 +12,7 @@
 
 ### 🌐 Live Web Application
 
-> ### 🔗 Access the Live App: [**https://hamradio.privatedns.org**](https://hamradio.privatedns.org)
+> ### 🔗 Access the Live App: [**https://openham.org**](https://openham.org)
 >
 > **Instant Browser Access** — Study the complete official FCC question pools directly in your browser with zero setup, full offline support, and automatic cloud progress synchronization.
 

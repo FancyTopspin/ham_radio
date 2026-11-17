@@ -41,7 +41,7 @@ def create_qr_code(data: str) -> BytesIO:
     buf.seek(0)
     return buf
 
-def build_ve_flyer(output_path: str, url: str = "https://hamradio.privatedns.org"):
+def build_ve_flyer(output_path: str, url: str = "https://openham.org"):
     # 8.5 x 11 inches: 612 x 792 points
     # Margins: 28pt top/bottom, 32pt left/right -> Usable: 548 x 736 pt
     doc = SimpleDocTemplate(
@@ -283,7 +283,7 @@ def build_ve_flyer(output_path: str, url: str = "https://hamradio.privatedns.org
         Spacer(1, 2),
         Paragraph("Scan with phone camera", qr_label_sub),
         Spacer(1, 2),
-        Paragraph("hamradio.privatedns.org", qr_label_url),
+        Paragraph("openham.org", qr_label_url),
         Spacer(1, 1),
         Paragraph("Instant access • No credit card • Ad-free", qr_label_sub),
     ]
@@ -319,7 +319,7 @@ def build_ve_flyer(output_path: str, url: str = "https://hamradio.privatedns.org
         Paragraph("STEP 1", card_step_num),
         Paragraph("Study & Practice", card_step_title),
         Spacer(1, 2),
-        Paragraph("Master the official questions at <b>hamradio.privatedns.org</b>. Aim for consistent 85%+ on mock exams.", card_step_desc),
+        Paragraph("Master the official questions at <b>openham.org</b>. Aim for consistent 85%+ on mock exams.", card_step_desc),
     ]
     step2 = [
         Paragraph("STEP 2", card_step_num),
@@ -403,7 +403,7 @@ def build_ve_flyer(output_path: str, url: str = "https://hamradio.privatedns.org
     # -------------------------------------------------------------
     footer_p = Paragraph(
         "<b>Current Official Question Pools:</b> Technician (Element 2) 2026–2030 • General (Element 3) 2023–2027 • Amateur Extra (Element 4) 2024–2028<br/>"
-        "Free to print and distribute for amateur radio clubs, VE teams, hamfests, and STEM events. • <b>https://hamradio.privatedns.org</b>",
+        "Free to print and distribute for amateur radio clubs, VE teams, hamfests, and STEM events. • <b>https://openham.org</b>",
         footer_text,
     )
     story.append(footer_p)

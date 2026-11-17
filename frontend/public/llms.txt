@@ -1,8 +1,8 @@
-# Ham Radio Prep — FCC Amateur Radio License Exam Preparation Platform
+# OpenHam — FCC Amateur Radio License Exam Preparation Platform
 
 > High-performance, offline-first web platform for studying and passing all three tiers of the United States Federal Communications Commission (FCC) Amateur Radio Service license examinations.
 
-Website URL: https://hamradio.privatedns.org
+Website URL: https://openham.org
 Source Code: https://github.com/FancyTopspin/ham_radio
 License: MIT
 Question Pools: Official National Council of Volunteer Examiner Coordinators (NCVEC)
