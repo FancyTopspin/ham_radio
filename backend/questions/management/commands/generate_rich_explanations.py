@@ -7,7 +7,8 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from questions.models import Question, Explanation
+from django.utils import timezone
+from questions.models import Question, Explanation, LicensePool
 
 db_lock = threading.Lock()
 
@@ -218,6 +219,11 @@ class Command(BaseCommand):
                     failed_count += len(batch)
 
         elapsed_total = time.time() - start_time
+        if target_class == 'ALL':
+            LicensePool.objects.all().update(updated_at=timezone.now())
+        else:
+            LicensePool.objects.filter(class_type=target_class).update(updated_at=timezone.now())
+
         self.stdout.write(self.style.SUCCESS(
             f"Finished generating explanations in {elapsed_total:.1f}s! Successfully updated: {completed_count}, Failed: {failed_count}."
         ))

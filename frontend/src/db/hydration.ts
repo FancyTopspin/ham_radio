@@ -4,7 +4,7 @@ import type { LicenseClassType, Question, QuestionState } from '../types';
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 const POOL_VERSIONS: Record<LicenseClassType, string> = {
-  TECH: '2026-2030_v1',
+  TECH: '2026-2030_v2',
   GEN: '2023-2027_v1',
   EXTRA: '2024-2028_v1',
 };
@@ -16,7 +16,7 @@ export async function hydratePoolQuestions(classType: LicenseClassType, force = 
   const isForce = force || versionMismatch;
 
   const existingCount = await db.questions.where('class_type').equals(classType).count();
-  const hasRichExplanations = localStorage.getItem(`ham_rich_explanations_${classType}`) === 'v2';
+  const hasRichExplanations = localStorage.getItem(`ham_rich_explanations_${classType}`) === 'v3';
   const hasDiagrams = localStorage.getItem(`ham_diagrams_${classType}`) === 'v1';
   
   if (existingCount > 0 && !isForce && hasRichExplanations && hasDiagrams) {
@@ -40,13 +40,13 @@ export async function hydratePoolQuestions(classType: LicenseClassType, force = 
     }));
 
     await db.transaction('rw', [db.questions, db.choices, db.explanations, db.question_states], async () => {
-      // Clear old questions for this class if forcing refresh or version mismatch
+      // Clear old questions, choices, and explanations for this class if forcing refresh or version mismatch.
+      // Notice: db.question_states is intentionally preserved so user learning history and mastery buckets are retained!
       if (isForce) {
         const oldIds = await db.questions.where('class_type').equals(classType).primaryKeys();
         await db.questions.bulkDelete(oldIds);
         await db.choices.where('question_id').anyOf(oldIds).delete();
         await db.explanations.where('question_id').anyOf(oldIds).delete();
-        await db.question_states.where('class_type').equals(classType).delete();
       }
 
       await db.questions.bulkPut(preparedQuestions);
@@ -86,7 +86,7 @@ export async function hydratePoolQuestions(classType: LicenseClassType, force = 
       if (newStates.length > 0) {
         await db.question_states.bulkPut(newStates);
       }
-      localStorage.setItem(`ham_rich_explanations_${classType}`, 'v2');
+      localStorage.setItem(`ham_rich_explanations_${classType}`, 'v3');
       localStorage.setItem(`ham_diagrams_${classType}`, 'v1');
       localStorage.setItem(`ham_pool_version_${classType}`, currentPoolVersion);
     });
