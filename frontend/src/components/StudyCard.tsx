@@ -1,11 +1,12 @@
-import React from 'react';
-import { ExternalLink, Sparkles, TrendingDown, HelpCircle, MessageSquarePlus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ExternalLink, Sparkles, TrendingDown, HelpCircle, MessageSquarePlus, Edit3 } from 'lucide-react';
 import type { Question, StudyBucket } from '../types';
 import type { DisplayedChoice } from '../engine/shuffler';
 import type { TransitionResult } from '../engine/studyEngine';
 import { ChoiceButton } from './ChoiceButton';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { useApp } from '../context/AppContext';
+import { AdminQuestionEditor } from './AdminQuestionEditor';
 
 interface StudyCardProps {
   question: Question;
@@ -35,8 +36,31 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   onSelectChoice,
   onAdvance,
 }) => {
-  const { openFeedbackModal } = useApp();
+  const { openFeedbackModal, currentUser } = useApp();
+  const isAdmin = !!(currentUser?.is_staff || currentUser?.is_superuser);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState<Question>(question);
+
+  useEffect(() => {
+    setCurrentQuestion(question);
+  }, [question]);
+
   const bucketInfo = BUCKET_LABELS[currentBucket] || BUCKET_LABELS.unseen;
+
+  if (isEditing) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <AdminQuestionEditor
+          question={currentQuestion}
+          onSave={(updated) => {
+            setCurrentQuestion(updated);
+            setIsEditing(false);
+          }}
+          onCancel={() => setIsEditing(false)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -44,23 +68,35 @@ export const StudyCard: React.FC<StudyCardProps> = ({
       <div className="bg-slate-50 border-b border-slate-200 px-6 py-4 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center space-x-2">
           <span className="font-mono font-bold text-base text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md">
-            {question.question_code}
+            {currentQuestion.question_code}
           </span>
           <span className="text-xs font-semibold px-2 py-1 rounded-md bg-slate-200 text-slate-700">
-            Group {question.sub_group_code}
+            Group {currentQuestion.sub_group_code}
           </span>
-          {question.fcc_citation && (
+          {currentQuestion.fcc_citation && (
             <span className="text-xs font-mono px-2 py-1 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
-              [{question.fcc_citation}]
+              [{currentQuestion.fcc_citation}]
             </span>
           )}
         </div>
 
-        {/* Bucket Status Badge & Feedback Trigger */}
+        {/* Bucket Status Badge & Admin / Feedback Triggers */}
         <div className="flex items-center space-x-2">
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={() => setIsEditing(true)}
+              className="inline-flex items-center space-x-1 text-xs text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2.5 py-1 rounded-md transition font-semibold cursor-pointer shadow-2xs"
+              title="Edit Question & Explanation"
+            >
+              <Edit3 className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Edit (Admin)</span>
+            </button>
+          )}
+
           <button
             type="button"
-            onClick={() => openFeedbackModal({ category: 'question_issue', questionCode: question.question_code })}
+            onClick={() => openFeedbackModal({ category: 'question_issue', questionCode: currentQuestion.question_code })}
             className="inline-flex items-center space-x-1 text-slate-400 hover:text-amber-600 hover:bg-amber-50 px-2 py-1 rounded-lg border border-transparent hover:border-amber-200 transition text-xs cursor-pointer"
             title="Report an issue or suggest an improvement for this question"
           >
@@ -77,20 +113,20 @@ export const StudyCard: React.FC<StudyCardProps> = ({
       <div className="p-6 space-y-6">
         {/* Question Text */}
         <div className="text-lg sm:text-xl font-medium text-slate-900 leading-relaxed">
-          {question.question_text}
+          {currentQuestion.question_text}
         </div>
 
         {/* Diagram Callout if present */}
-        {question.has_diagram && (
+        {currentQuestion.has_diagram && (
           <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900">
             <div className="flex items-center space-x-2 font-semibold text-sm">
               <HelpCircle className="w-4 h-4 text-amber-600" />
-              <span>Diagram Reference: {question.diagram_figure_name || 'Refer to Exam Figure'}</span>
+              <span>Diagram Reference: {currentQuestion.diagram_figure_name || 'Refer to Exam Figure'}</span>
             </div>
-            {question.diagram_image_url ? (
+            {currentQuestion.diagram_image_url ? (
               <img
-                src={question.diagram_image_url}
-                alt={question.diagram_figure_name}
+                src={currentQuestion.diagram_image_url}
+                alt={currentQuestion.diagram_figure_name}
                 className="mt-3 max-h-64 rounded-lg border border-amber-200 mx-auto"
               />
             ) : (
@@ -103,18 +139,24 @@ export const StudyCard: React.FC<StudyCardProps> = ({
 
         {/* Choices List */}
         <div className="space-y-3">
-          {shuffledChoices.map((choice, idx) => (
-            <ChoiceButton
-              key={choice.id}
-              choice={choice}
-              index={idx}
-              isSelected={selectedChoiceId === choice.id}
-              isCorrect={choice.id === question.correct_choice_id}
-              showFeedback={showFeedback}
-              disabled={showFeedback}
-              onSelect={() => onSelectChoice(choice.id)}
-            />
-          ))}
+          {shuffledChoices.map((choice, idx) => {
+            const rawChoice = currentQuestion.choices?.find(c => c.id === choice.id);
+            const updatedChoice: DisplayedChoice = rawChoice
+              ? { ...rawChoice, displayLetter: choice.displayLetter }
+              : choice;
+            return (
+              <ChoiceButton
+                key={choice.id}
+                choice={updatedChoice}
+                index={idx}
+                isSelected={selectedChoiceId === choice.id}
+                isCorrect={choice.id === currentQuestion.correct_choice_id}
+                showFeedback={showFeedback}
+                disabled={showFeedback}
+                onSelect={() => onSelectChoice(choice.id)}
+              />
+            );
+          })}
         </div>
 
         {/* Instant Feedback Reveal in Study Mode */}
@@ -139,31 +181,51 @@ export const StudyCard: React.FC<StudyCardProps> = ({
             )}
 
             {/* Explanation Box */}
-            {question.explanation && (
+            {currentQuestion.explanation && (
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 text-sm space-y-2 text-slate-800">
                 <div className="font-bold text-slate-900 flex items-center justify-between">
-                  <span>Explanation & Rule Citation</span>
-                  {question.explanation.fcc_citation_url && (
-                    <a
-                      href={question.explanation.fcc_citation_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:text-blue-800 flex items-center space-x-1 font-semibold"
-                    >
-                      <span>Read Rule on eCFR</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
+                  <div className="flex items-center space-x-2">
+                    <span>Explanation & Rule Citation</span>
+                    {currentQuestion.explanation.is_admin_verified && (
+                      <span className="text-[11px] font-medium bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-300">
+                        Admin Verified
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        className="inline-flex items-center space-x-1 text-xs text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2 py-0.5 rounded-md transition font-semibold cursor-pointer shadow-2xs"
+                        title="Edit Explanation"
+                      >
+                        <Edit3 className="w-3 h-3 text-indigo-600" />
+                        <span>Edit</span>
+                      </button>
+                    )}
+                    {currentQuestion.explanation.fcc_citation_url && (
+                      <a
+                        href={currentQuestion.explanation.fcc_citation_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-600 hover:text-blue-800 flex items-center space-x-1 font-semibold"
+                      >
+                        <span>Read Rule on eCFR</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
                 </div>
                 <div className="mt-2 pt-2 border-t border-slate-200">
-                  <MarkdownRenderer content={question.explanation.explanation_markdown} />
+                  <MarkdownRenderer content={currentQuestion.explanation.explanation_markdown} />
                 </div>
 
                 <div className="mt-3 pt-2.5 border-t border-slate-200/60 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
                   <span>Is this explanation clear and helpful?</span>
                   <button
                     type="button"
-                    onClick={() => openFeedbackModal({ category: 'question_issue', questionCode: question.question_code })}
+                    onClick={() => openFeedbackModal({ category: 'question_issue', questionCode: currentQuestion.question_code })}
                     className="text-blue-600 hover:text-blue-800 font-medium hover:underline flex items-center space-x-1 cursor-pointer"
                   >
                     <MessageSquarePlus className="w-3.5 h-3.5" />

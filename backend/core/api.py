@@ -11,6 +11,8 @@ class UserResponse(Schema):
     id: int
     username: str
     email: str
+    is_staff: bool = False
+    is_superuser: bool = False
 
 class AuthStatusResponse(Schema):
     authenticated: bool
@@ -39,6 +41,8 @@ def get_current_user(request):
                 "id": request.user.id,
                 "username": request.user.username,
                 "email": request.user.email,
+                "is_staff": request.user.is_staff,
+                "is_superuser": request.user.is_superuser,
             }
         }
     return {"authenticated": False, "user": None}
@@ -75,6 +79,8 @@ def register(request, payload: RegisterPayload):
                 "id": user.id,
                 "username": user.username,
                 "email": user.email,
+                "is_staff": user.is_staff,
+                "is_superuser": user.is_superuser,
             }
         }
     except IntegrityError:
@@ -106,6 +112,8 @@ def login_view(request, payload: LoginPayload):
             "id": user.id,
             "username": user.username,
             "email": user.email,
+            "is_staff": user.is_staff,
+            "is_superuser": user.is_superuser,
         }
     }
 
