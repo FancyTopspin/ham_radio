@@ -123,6 +123,13 @@ DATABASE_URL = os.getenv('DATABASE_URL', default_db_url)
 DATABASES = {
     'default': dj_database_url.config(default=default_db_url, conn_max_age=600)
 }
+if 'mysql' in DATABASES['default']['ENGINE']:
+    DATABASES['default']['OPTIONS'] = {
+        'charset': 'utf8mb4',
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES', NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'",
+    }
+
+SILENCED_SYSTEM_CHECKS = ['models.W036']
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
