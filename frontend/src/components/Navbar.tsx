@@ -110,14 +110,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
           
           {/* Logo & Brand */}
           <div className="flex items-center space-x-1.5 sm:space-x-3 cursor-pointer shrink-0" onClick={() => setCurrentTab('dashboard')}>
-            <div className="p-1 sm:p-2 bg-blue-600 rounded-lg text-white shrink-0">
+            <div className="p-1 sm:p-2 bg-blue-600 rounded-lg text-white shrink-0 shadow-sm">
               <Radio className="w-3.5 h-3.5 sm:w-5 sm:h-5 animate-pulse" />
             </div>
             <div className="shrink-0 flex items-center">
-              <span className="font-extrabold text-xs sm:text-lg tracking-tight whitespace-nowrap">
-                Ham Radio<span className="hidden xs:inline sm:inline"> Prep</span>
+              <span className="font-extrabold text-sm sm:text-xl tracking-tight whitespace-nowrap text-white">
+                OpenHam<span className="text-blue-400 font-semibold text-xs sm:text-sm ml-1 hidden xs:inline">Prep</span>
               </span>
-              <span className="hidden lg:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded bg-blue-900 text-blue-200 border border-blue-700">
+              <span className="hidden lg:inline-block ml-2.5 text-[11px] font-semibold px-2 py-0.5 rounded bg-blue-900/80 text-blue-200 border border-blue-700/60">
                 FCC / NCVEC
               </span>
             </div>

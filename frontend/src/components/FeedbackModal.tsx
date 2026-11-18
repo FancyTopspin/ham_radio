@@ -31,7 +31,7 @@ const CATEGORIES: {
     id: 'general',
     label: 'General Feedback',
     icon: MessageSquare,
-    placeholder: 'What do you like, or what could we improve about Ham Radio Prep?',
+    placeholder: 'What do you like, or what could we improve about OpenHam?',
   },
   {
     id: 'question_issue',
@@ -168,7 +168,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                 Share Your Feedback
               </h3>
               <p className="text-xs text-slate-500">
-                Help improve Ham Radio Prep for the amateur radio community
+                Help improve OpenHam for the amateur radio community
               </p>
             </div>
           </div>
