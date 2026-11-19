@@ -25,4 +25,8 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
+# AI Context & Knowledge Specifications (llmstxt.org)
+LLMs-txt: https://openham.org/llms.txt
+LLMs-full-txt: https://openham.org/llms-full.txt
+
 Sitemap: https://openham.org/sitemap.xml
